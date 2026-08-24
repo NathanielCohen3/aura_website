@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- ============ EDIT: page title / social preview ============ -->
+<title>AURA — Streaming Audio-Driven Video Generation</title>
+<meta property="og:title" content="AURA: Streaming Audio-Driven Video Generation">
+<meta property="og:description" content="Project page for AURA.">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+
+<style>
+:root{
+  --bg:#ffffff; --bg-alt:#f6f7f9; --ink:#14151a; --muted:#6b6f76;
+  --accent:#4f46e5; --accent-2:#7c74f2; --accent-soft:#eef0fe;
+  --line:#e6e8ec; --radius:14px; --maxw:1060px; --narrow:760px;
+  --mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --sans:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;scroll-padding-top:70px;}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
+  line-height:1.65;-webkit-font-smoothing:antialiased;}
+a{color:var(--accent);text-decoration:none;}
+a:hover{text-decoration:underline;}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 1.5rem;}
+.narrow{max-width:var(--narrow);margin-left:auto;margin-right:auto;}
+section{padding:4rem 0;}
+.alt{background:var(--bg-alt);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--accent);margin:0 0 .6rem;}
+h2.title{font-size:clamp(1.6rem,3.2vw,2.15rem);font-weight:700;letter-spacing:-.02em;margin:0 0 1.5rem;}
+p{margin:0 0 1rem;}
+
+/* ---------- NAV ---------- */
+.nav{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(255,255,255,.82);
+  backdrop-filter:saturate(180%) blur(12px);border-bottom:1px solid var(--line);}
+.nav-in{max-width:var(--maxw);margin:0 auto;display:flex;align-items:center;
+  justify-content:space-between;padding:.7rem 1.5rem;}
+.brand{font-weight:800;letter-spacing:.02em;font-size:1.05rem;color:var(--ink);}
+.nav-links{display:flex;gap:.25rem;flex-wrap:wrap;}
+.nav-links a{font-family:var(--mono);font-size:.75rem;letter-spacing:.04em;color:var(--muted);
+  padding:.35rem .6rem;border-radius:8px;}
+.nav-links a:hover{color:var(--ink);background:var(--accent-soft);text-decoration:none;}
+.nav-links a.active{color:var(--accent);background:var(--accent-soft);}
+.burger{display:none;background:none;border:none;font-size:1.2rem;color:var(--ink);cursor:pointer;}
+
+/* ---------- HERO ---------- */
+.hero{padding:6.5rem 0 3rem;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:"";position:absolute;inset:0;z-index:-1;
+  background:radial-gradient(60% 55% at 50% 0%,var(--accent-soft) 0%,transparent 70%);}
+.venue{display:inline-block;font-family:var(--mono);font-size:.75rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--accent);background:#fff;border:1px solid var(--line);
+  padding:.35rem .85rem;border-radius:999px;margin-bottom:1.4rem;}
+.h1{font-size:clamp(2.1rem,5.2vw,3.4rem);font-weight:800;letter-spacing:-.03em;line-height:1.05;margin:0;}
+.h1 .accent{color:var(--accent);}
+.tagline{color:var(--muted);font-size:clamp(1rem,2vw,1.2rem);margin:.9rem auto 0;max-width:640px;}
+.authors{margin:1.6rem auto .4rem;max-width:720px;font-size:1.02rem;}
+.authors a{color:var(--ink);}
+.authors a:hover{color:var(--accent);}
+.affil{color:var(--muted);font-size:.92rem;}
+.links{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;margin-top:1.6rem;}
+.btn{display:inline-flex;align-items:center;gap:.5rem;background:var(--ink);color:#fff;
+  padding:.6rem 1.1rem;border-radius:999px;font-weight:600;font-size:.92rem;border:1px solid var(--ink);}
+.btn:hover{background:var(--accent);border-color:var(--accent);text-decoration:none;}
+.btn.ghost{background:#fff;color:var(--ink);border-color:var(--line);}
+.btn.ghost:hover{border-color:var(--accent);color:var(--accent);background:#fff;}
+
+/* ---------- STATS ---------- */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:2.6rem;}
+.stat{border:1px solid var(--line);border-radius:var(--radius);padding:1.1rem .8rem;background:#fff;}
+.stat .num{font-size:1.7rem;font-weight:800;letter-spacing:-.02em;color:var(--accent);}
+.stat .lbl{font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);margin-top:.25rem;}
+
+/* ---------- TLDR ---------- */
+.tldr{border-left:3px solid var(--accent);background:var(--accent-soft);
+  border-radius:0 var(--radius) var(--radius) 0;padding:1.2rem 1.4rem;margin-top:2.6rem;text-align:left;}
+.tldr b{font-family:var(--mono);font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);}
+.tldr p{margin:.4rem 0 0;}
+
+/* ---------- MEDIA (video/img with graceful placeholder) ---------- */
+.media{position:relative;border-radius:var(--radius);overflow:hidden;background:#0b0b0e;
+  aspect-ratio:16/9;border:1px solid var(--line);}
+.media.portrait{aspect-ratio:3/4;}
+.media video,.media img{width:100%;height:100%;object-fit:contain;display:block;background:#0b0b0e;}
+.media-ph{position:absolute;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column;
+  gap:.5rem;background:#fafbfc;color:var(--muted);text-align:center;padding:1rem;font-size:.82rem;}
+.media-ph i{font-size:1.3rem;color:var(--accent);opacity:.7;}
+.media-ph code{font-family:var(--mono);background:#fff;border:1px solid var(--line);border-radius:6px;
+  padding:.12rem .45rem;color:var(--accent);font-size:.78rem;}
+.caption{color:var(--muted);font-size:.86rem;margin-top:.55rem;text-align:center;}
+
+.grid{display:grid;gap:1.1rem;}
+.grid.g2{grid-template-columns:repeat(2,1fr);}
+.grid.g3{grid-template-columns:repeat(3,1fr);}
+.grid.g4{grid-template-columns:repeat(4,1fr);}
+
+/* ---------- METHOD STEPS ---------- */
+.steps{display:grid;gap:1rem;margin-top:1.8rem;}
+.step{display:flex;gap:1rem;align-items:flex-start;border:1px solid var(--line);
+  border-radius:var(--radius);padding:1.1rem 1.2rem;background:#fff;}
+.step .n{flex:none;width:2rem;height:2rem;border-radius:8px;background:var(--accent-soft);
+  color:var(--accent);font-weight:700;display:flex;align-items:center;justify-content:center;font-family:var(--mono);}
+.step h4{margin:.1rem 0 .3rem;font-size:1.02rem;}
+.step p{margin:0;color:var(--muted);font-size:.95rem;}
+
+/* ---------- COMPARATOR ---------- */
+.cmp-bar{display:flex;flex-wrap:wrap;gap:1.5rem;align-items:center;justify-content:space-between;margin-bottom:1.2rem;}
+.tabs{display:flex;gap:.4rem;flex-wrap:wrap;}
+.tab{font-family:var(--mono);font-size:.75rem;letter-spacing:.03em;padding:.4rem .8rem;border-radius:999px;
+  border:1px solid var(--line);background:#fff;color:var(--muted);cursor:pointer;}
+.tab:hover{color:var(--ink);}
+.tab.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+.tab.active.ours{background:var(--accent);border-color:var(--accent);}
+.cmp-label{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-right:.5rem;}
+#cmp-grid{display:grid;gap:.9rem;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));}
+.cell .clabel{font-size:.82rem;font-weight:600;margin-top:.5rem;text-align:center;}
+.cell .clabel.ours{color:var(--accent);}
+.cmp-controls{display:flex;align-items:center;gap:1rem;margin-top:1.2rem;}
+.cmp-controls button{background:var(--ink);color:#fff;border:none;width:2.4rem;height:2.4rem;border-radius:50%;
+  cursor:pointer;font-size:.9rem;flex:none;}
+.cmp-controls input[type=range]{flex:1;accent-color:var(--accent);}
+
+/* ---------- TABLE ---------- */
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius);}
+table{border-collapse:collapse;width:100%;font-size:.9rem;min-width:640px;}
+th,td{padding:.65rem .8rem;text-align:center;border-bottom:1px solid var(--line);}
+th{font-family:var(--mono);font-size:.72rem;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);background:var(--bg-alt);}
+td:first-child,th:first-child{text-align:left;}
+tr.ours{background:var(--accent-soft);font-weight:600;}
+
+/* ---------- BIBTEX ---------- */
+.bibbox{position:relative;}
+pre.bibtex{background:#0f1016;color:#e7e7ef;border-radius:var(--radius);padding:1.4rem;overflow-x:auto;
+  font-family:var(--mono);font-size:.82rem;line-height:1.55;margin:0;}
+.copybtn{position:absolute;top:.8rem;right:.8rem;background:#2a2b36;color:#fff;border:none;
+  border-radius:8px;padding:.4rem .7rem;font-size:.78rem;cursor:pointer;font-family:var(--mono);}
+.copybtn:hover{background:var(--accent);}
+
+/* ---------- FOOTER ---------- */
+footer{padding:2.5rem 0;text-align:center;color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);}
+
+/* ---------- RESPONSIVE ---------- */
+@media(max-width:820px){
+  .nav-links{display:none;position:absolute;top:100%;left:0;right:0;background:#fff;flex-direction:column;
+    padding:.5rem 1.5rem 1rem;border-bottom:1px solid var(--line);}
+  .nav-links.open{display:flex;}
+  .burger{display:block;}
+  .stats{grid-template-columns:repeat(2,1fr);}
+  .grid.g3,.grid.g4{grid-template-columns:repeat(2,1fr);}
+}
+@media(max-width:520px){
+  .grid.g2,.grid.g3,.grid.g4{grid-template-columns:1fr;}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto;}*{transition:none!important;}}
+</style>
+</head>
+<body>
+
+<!-- ================= NAV ================= -->
+<nav class="nav">
+  <div class="nav-in">
+    <a href="#top" class="brand">AURA</a>
+    <button class="burger" aria-label="menu"><i class="fas fa-bars"></i></button>
+    <div class="nav-links">
+      <a href="#abstract">Abstract</a>
+      <a href="#method">Method</a>
+      <a href="#results">Results</a>
+      <a href="#comparisons">Comparisons</a>
+      <a href="#ablations">Ablations</a>
+      <a href="#quant">Quantitative</a>
+      <a href="#bibtex">BibTeX</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ================= HERO ================= -->
+<header class="hero" id="top">
+  <div class="wrap">
+    <span class="venue">BMVC 2026</span>
+    <!-- EDIT: full paper title -->
+    <h1 class="h1">AURA<span class="accent">:</span><br><span style="font-size:.5em;font-weight:700;">[Full Paper Title Here]</span></h1>
+    <p class="tagline">[One-line tagline — e.g. Fast, streaming, audio-driven video generation.]</p>
+
+    <!-- EDIT: authors — verify order & affiliations -->
+    <p class="authors">
+      <a href="https://www.linkedin.com/in/nathaniel-cohen-6032b7235/">Nathaniel Cohen</a><sup>1</sup>,
+      <a href="https://nicolas-dufour.github.io/">Nicolas Dufour</a><sup>1</sup>,
+      <a href="#">Amélie Royer</a><sup>1</sup>,
+      <a href="#">Alasdair Newson</a><sup>2</sup>,
+      <a href="https://ptrckprz.github.io/">Patrick Pérez</a><sup>1</sup>
+    </p>
+    <p class="affil"><sup>1</sup>Kyutai &nbsp;·&nbsp; <sup>2</sup>Sorbonne Université, ISIR</p>
+
+    <!-- EDIT: links -->
+    <div class="links">
+      <a class="btn" href="#"><i class="fas fa-file-pdf"></i> Paper</a>
+      <a class="btn ghost" href="#"><i class="ai ai-arxiv"></i> arXiv</a>
+      <a class="btn ghost" href="#"><i class="fab fa-github"></i> Code</a>
+      <a class="btn ghost" href="#"><i class="fab fa-youtube"></i> Video</a>
+    </div>
+
+    <!-- EDIT: three or four headline numbers -->
+    <div class="stats">
+      <div class="stat"><div class="num">25 Hz</div><div class="lbl">Real-time streaming</div></div>
+      <div class="stat"><div class="num">&times;N</div><div class="lbl">Faster than [baseline]</div></div>
+      <div class="stat"><div class="num">&infin;</div><div class="lbl">Arbitrary length</div></div>
+      <div class="stat"><div class="num">[?]</div><div class="lbl">[Metric]</div></div>
+    </div>
+
+    <div class="tldr narrow" style="max-width:var(--narrow);">
+      <b>TL;DR</b>
+      <p>[One or two sentences summarizing AURA — what it does and why it matters.]</p>
+    </div>
+  </div>
+</header>
+
+<!-- ================= TEASER ================= -->
+<section style="padding-top:1.5rem;">
+  <div class="wrap narrow">
+    <div class="media">
+      <video autoplay muted loop playsinline preload="metadata">
+        <source src="static/videos/teaser.mp4" type="video/mp4">
+      </video>
+      <div class="media-ph"><i class="fas fa-film"></i><span>Teaser</span><code>static/videos/teaser.mp4</code></div>
+    </div>
+    <p class="caption">[Teaser caption.]</p>
+  </div>
+</section>
+
+<!-- ================= ABSTRACT ================= -->
+<section id="abstract" class="alt">
+  <div class="wrap narrow">
+    <p class="eyebrow">Abstract</p>
+    <h2 class="title">Overview</h2>
+    <p style="text-align:justify;">[PLACEHOLDER — paste the paper abstract here.]</p>
+  </div>
+</section>
+
+<!-- ================= METHOD ================= -->
+<section id="method">
+  <div class="wrap narrow">
+    <p class="eyebrow">Method</p>
+    <h2 class="title">How AURA works</h2>
+    <div class="media">
+      <img src="static/images/method.png" alt="Method overview">
+      <div class="media-ph"><i class="fas fa-diagram-project"></i><span>Method figure</span><code>static/images/method.png</code></div>
+    </div>
+    <p class="caption">Figure 1. Overview of the AURA pipeline.</p>
+    <div class="steps">
+      <div class="step"><div class="n">1</div><div><h4>[Streaming architecture]</h4><p>[Short description of the core design.]</p></div></div>
+      <div class="step"><div class="n">2</div><div><h4>[Training / distillation]</h4><p>[Short description of how it is trained.]</p></div></div>
+      <div class="step"><div class="n">3</div><div><h4>[Real-time inference]</h4><p>[Short description of the inference-time behaviour.]</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= QUALITATIVE RESULTS ================= -->
+<section id="results" class="alt">
+  <div class="wrap">
+    <p class="eyebrow" style="text-align:center;">Results</p>
+    <h2 class="title" style="text-align:center;">AURA in action</h2>
+    <p class="caption" style="margin-bottom:1.6rem;">Unmute any clip to play with audio.</p>
+    <div class="grid g3">
+      <div><div class="media portrait"><video muted loop playsinline controls preload="metadata"><source src="static/videos/results/01.mp4" type="video/mp4"></video><div class="media-ph"><i class="fas fa-play"></i><code>results/01.mp4</code></div></div></div>
+      <div><div class="media portrait"><video muted loop playsinline controls preload="metadata"><source src="static/videos/results/02.mp4" type="video/mp4"></video><div class="media-ph"><i class="fas fa-play"></i><code>results/02.mp4</code></div></div></div>
+      <div><div class="media portrait"><video muted loop playsinline controls preload="metadata"><source src="static/videos/results/03.mp4" type="video/mp4"></video><div class="media-ph"><i class="fas fa-play"></i><code>results/03.mp4</code></div></div></div>
+      <div><div class="media portrait"><video muted loop playsinline controls preload="metadata"><source src="static/videos/results/04.mp4" type="video/mp4"></video><div class="media-ph"><i class="fas fa-play"></i><code>results/04.mp4</code></div></div></div>
+      <div><div class="media portrait"><video muted loop playsinline controls preload="metadata"><source src="static/videos/results/05.mp4" type="video/mp4"></video><div class="media-ph"><i class="fas fa-play"></i><code>results/05.mp4</code></div></div></div>
+      <div><div class="media portrait"><video muted loop playsinline controls preload="metadata"><source src="static/videos/results/06.mp4" type="video/mp4"></video><div class="media-ph"><i class="fas fa-play"></i><code>results/06.mp4</code></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= COMPARISONS (synchronized) ================= -->
+<section id="comparisons">
+  <div class="wrap">
+    <p class="eyebrow" style="text-align:center;">Comparisons</p>
+    <h2 class="title" style="text-align:center;">Versus baselines</h2>
+    <p class="caption" style="margin-bottom:1.6rem;">Playback is synchronized across all methods. Switch test set and sample below.</p>
+
+    <div class="cmp-bar">
+      <div><span class="cmp-label">Test set</span><span id="cmp-sets" class="tabs" style="display:inline-flex;"></span></div>
+      <div><span class="cmp-label">Sample</span><span id="cmp-samples" class="tabs" style="display:inline-flex;"></span></div>
+    </div>
+
+    <div id="cmp-grid"></div>
+
+    <div class="cmp-controls narrow">
+      <button id="cmp-play" aria-label="play/pause"><i class="fas fa-pause"></i></button>
+      <input id="cmp-seek" type="range" min="0" max="100" value="0" step="0.1">
+    </div>
+  </div>
+</section>
+
+<!-- ================= ABLATIONS ================= -->
+<section id="ablations" class="alt">
+  <div class="wrap">
+    <p class="eyebrow" style="text-align:center;">Ablations</p>
+    <h2 class="title" style="text-align:center;">Ablation studies</h2>
+    <div class="grid g3">
+      <div><div class="media portrait"><video muted loop playsinline controls preload="metadata"><source src="static/videos/ablations/a.mp4" type="video/mp4"></video><div class="media-ph"><i class="fas fa-flask"></i><code>ablations/a.mp4</code></div></div><p class="caption">[Ablation A]</p></div>
+      <div><div class="media portrait"><video muted loop playsinline controls preload="metadata"><source src="static/videos/ablations/b.mp4" type="video/mp4"></video><div class="media-ph"><i class="fas fa-flask"></i><code>ablations/b.mp4</code></div></div><p class="caption">[Ablation B]</p></div>
+      <div><div class="media portrait"><video muted loop playsinline controls preload="metadata"><source src="static/videos/ablations/c.mp4" type="video/mp4"></video><div class="media-ph"><i class="fas fa-flask"></i><code>ablations/c.mp4</code></div></div><p class="caption">[Ablation C]</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= QUANTITATIVE ================= -->
+<section id="quant">
+  <div class="wrap narrow">
+    <p class="eyebrow">Quantitative</p>
+    <h2 class="title">User study &amp; metrics</h2>
+    <p class="caption" style="margin-bottom:1rem;text-align:left;">[Describe the study — e.g. pairwise comparisons, Bayesian Elo. Best in <b>bold</b>.]</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Method</th><th>[Metric 1] &uarr;</th><th>[Metric 2] &uarr;</th><th>[Metric 3] &darr;</th><th>FPS &uarr;</th></tr></thead>
+        <tbody>
+          <tr><td>[Baseline A]</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td></tr>
+          <tr><td>[Baseline B]</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td></tr>
+          <tr class="ours"><td>AURA (ours)</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ================= BIBTEX ================= -->
+<section id="bibtex" class="alt">
+  <div class="wrap narrow">
+    <p class="eyebrow">Citation</p>
+    <h2 class="title">BibTeX</h2>
+    <div class="bibbox">
+      <button class="copybtn" id="copybtn">Copy</button>
+      <pre class="bibtex" id="bib">@inproceedings{cohen2026aura,
+  title     = {AURA: [Full Paper Title]},
+  author    = {Cohen, Nathaniel and Dufour, Nicolas and Royer, Am{\'e}lie
+               and Newson, Alasdair and P{\'e}rez, Patrick},
+  booktitle = {British Machine Vision Conference (BMVC)},
+  year      = {2026},
+}</pre>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap narrow">
+    <p>[Acknowledgements go here.]</p>
+    <p style="margin-top:.6rem;">Icons by <a href="https://fontawesome.com/">Font Awesome</a> &amp; <a href="https://jpswalsh.github.io/academicons/">Academicons</a>. Built with vanilla HTML / CSS / JS.</p>
+  </div>
+</footer>
+
+<script>
+/* ---------- nav: burger + scrollspy ---------- */
+const burger=document.querySelector('.burger'),links=document.querySelector('.nav-links');
+burger.addEventListener('click',()=>links.classList.toggle('open'));
+links.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>links.classList.remove('open')));
+const navA=[...document.querySelectorAll('.nav-links a')];
+const secs=navA.map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean);
+const spy=()=>{let i=secs.length-1;for(;i>=0;i--){if(secs[i].getBoundingClientRect().top<=90)break;}
+  navA.forEach(a=>a.classList.remove('active'));if(i>=0&&navA[i])navA[i].classList.add('active');};
+window.addEventListener('scroll',spy,{passive:true});spy();
+
+/* ---------- graceful media placeholders ---------- */
+function wireMedia(root){
+  (root||document).querySelectorAll('.media').forEach(m=>{
+    const el=m.querySelector('video,img'),ph=m.querySelector('.media-ph');
+    if(!el||!ph||el.dataset.wired)return;el.dataset.wired='1';
+    const fail=()=>{el.style.visibility='hidden';ph.style.display='flex';};
+    const ok=()=>{el.style.visibility='visible';ph.style.display='none';};
+    if(el.tagName==='IMG'){el.addEventListener('error',fail);el.addEventListener('load',ok);
+      if(el.complete&&el.naturalWidth===0)fail();}
+    else{el.addEventListener('error',fail,true);el.addEventListener('loadeddata',ok);}
+  });
+}
+wireMedia(document);
+
+/* ---------- BibTeX copy ---------- */
+document.getElementById('copybtn').addEventListener('click',function(){
+  navigator.clipboard.writeText(document.getElementById('bib').innerText).then(()=>{
+    this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1500);});
+});
+
+/* ====================================================================
+   SYNCHRONIZED COMPARATOR
+   EDIT this config: add test sets, samples, and method paths.
+   The "ours" flag highlights AURA. Videos play muted & synchronized.
+   ==================================================================== */
+const COMPARE={
+  "HDTF":[
+    {name:"Sample 1",methods:[
+      {label:"Input",     src:"static/videos/vs/hdtf/s1/input.mp4"},
+      {label:"AURA (ours)",src:"static/videos/vs/hdtf/s1/ours.mp4",ours:true},
+      {label:"Baseline A", src:"static/videos/vs/hdtf/s1/baseline_a.mp4"},
+      {label:"Baseline B", src:"static/videos/vs/hdtf/s1/baseline_b.mp4"}
+    ]},
+    {name:"Sample 2",methods:[
+      {label:"Input",     src:"static/videos/vs/hdtf/s2/input.mp4"},
+      {label:"AURA (ours)",src:"static/videos/vs/hdtf/s2/ours.mp4",ours:true},
+      {label:"Baseline A", src:"static/videos/vs/hdtf/s2/baseline_a.mp4"},
+      {label:"Baseline B", src:"static/videos/vs/hdtf/s2/baseline_b.mp4"}
+    ]}
+  ],
+  "Hallo3":[
+    {name:"Sample 1",methods:[
+      {label:"Input",     src:"static/videos/vs/hallo3/s1/input.mp4"},
+      {label:"AURA (ours)",src:"static/videos/vs/hallo3/s1/ours.mp4",ours:true},
+      {label:"Baseline A", src:"static/videos/vs/hallo3/s1/baseline_a.mp4"},
+      {label:"Baseline B", src:"static/videos/vs/hallo3/s1/baseline_b.mp4"}
+    ]}
+  ]
+};
+
+const setsEl=document.getElementById('cmp-sets'),sampEl=document.getElementById('cmp-samples'),
+      gridEl=document.getElementById('cmp-grid'),playBtn=document.getElementById('cmp-play'),
+      seek=document.getElementById('cmp-seek');
+let curSet=Object.keys(COMPARE)[0],curSample=0,vids=[],master=null;
+
+function buildTabs(){
+  setsEl.innerHTML='';Object.keys(COMPARE).forEach(k=>{
+    const b=document.createElement('button');b.className='tab'+(k===curSet?' active':'');b.textContent=k;
+    b.onclick=()=>{curSet=k;curSample=0;render();};setsEl.appendChild(b);});
+  sampEl.innerHTML='';COMPARE[curSet].forEach((s,i)=>{
+    const b=document.createElement('button');b.className='tab'+(i===curSample?' active':'');b.textContent=(i+1);
+    b.onclick=()=>{curSample=i;render();};sampEl.appendChild(b);});
+}
+function render(){
+  buildTabs();
+  const methods=COMPARE[curSet][curSample].methods;
+  gridEl.innerHTML='';vids=[];
+  methods.forEach(m=>{
+    const cell=document.createElement('div');cell.className='cell';
+    cell.innerHTML=
+      '<div class="media portrait"><video muted loop playsinline preload="metadata">'+
+      '<source src="'+m.src+'" type="video/mp4"></video>'+
+      '<div class="media-ph"><i class="fas fa-play"></i><code>'+m.src.split('/').pop()+'</code></div></div>'+
+      '<div class="clabel'+(m.ours?' ours':'')+'">'+m.label+'</div>';
+    gridEl.appendChild(cell);
+    vids.push(cell.querySelector('video'));
+  });
+  wireMedia(gridEl);
+  master=vids[0]||null;
+  vids.forEach(v=>{v.play().catch(()=>{});});
+  if(master){
+    master.addEventListener('timeupdate',syncTick);
+    master.addEventListener('loadedmetadata',()=>{if(isFinite(master.duration))seek.max=master.duration;});
+  }
+  setPlayIcon(true);
+}
+function syncTick(){
+  if(!master)return;
+  vids.forEach(v=>{if(v!==master&&Math.abs(v.currentTime-master.currentTime)>0.15)v.currentTime=master.currentTime;});
+  if(isFinite(master.duration))seek.value=master.currentTime;
+}
+function setPlayIcon(playing){playBtn.innerHTML='<i class="fas fa-'+(playing?'pause':'play')+'"></i>';}
+playBtn.onclick=()=>{
+  if(!vids.length)return;
+  const paused=vids[0].paused;
+  vids.forEach(v=>{paused?v.play().catch(()=>{}):v.pause();});
+  setPlayIcon(paused);
+};
+seek.oninput=()=>{vids.forEach(v=>{if(isFinite(v.duration))v.currentTime=+seek.value;});};
+render();
+</script>
+</body>
+</html>
