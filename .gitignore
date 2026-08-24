@@ -1,8 +1,10 @@
 .DS_Store
 
-# Video/image assets are hosted externally, not committed to this repo
-# (GitHub Pages soft limit is ~1GB and doesn't serve Git LFS content properly).
-# Drop files here for local preview only; host the real files externally
-# and point index.html's <source src> / <img src> at those URLs.
+# Video assets: still deciding hosting strategy (see project notes) — not
+# committed yet. Drop files here for local preview; host externally later
+# and point index.html's <source src> at those URLs.
 static/videos/
-static/images/
+
+# Figure PNGs in static/images/ ARE committed (small, a few hundred KB each).
+# Their vector PDF sources are not — keep those locally for provenance only.
+static/images/*.pdf
