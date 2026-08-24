@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- ============ EDIT: page title / social preview ============ -->
-<title>AURA — Streaming Audio-Driven Video Generation</title>
-<meta property="og:title" content="AURA: Streaming Audio-Driven Video Generation">
-<meta property="og:description" content="Project page for AURA.">
+<title>AURA — AUdio-dRiven streaming Avatar</title>
+<meta property="og:title" content="AURA: AUdio-dRiven streaming Avatar">
+<meta property="og:description" content="A 5B causal few-step speech-to-video model that streams 720p talking-head video at 9.7 FPS on a single GPU, 17x faster than its teacher.">
 <meta property="og:type" content="website">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -174,8 +174,8 @@ footer{padding:2.5rem 0;text-align:center;color:var(--muted);font-size:.85rem;bo
       <a href="#method">Method</a>
       <a href="#results">Results</a>
       <a href="#comparisons">Comparisons</a>
-      <a href="#ablations">Ablations</a>
       <a href="#quant">Quantitative</a>
+      <a href="#ablations">Ablations</a>
       <a href="#bibtex">BibTeX</a>
     </div>
   </div>
@@ -185,13 +185,11 @@ footer{padding:2.5rem 0;text-align:center;color:var(--muted);font-size:.85rem;bo
 <header class="hero" id="top">
   <div class="wrap">
     <span class="venue">BMVC 2026</span>
-    <!-- EDIT: full paper title -->
-    <h1 class="h1">AURA<span class="accent">:</span><br><span style="font-size:.5em;font-weight:700;">[Full Paper Title Here]</span></h1>
-    <p class="tagline">[One-line tagline — e.g. Fast, streaming, audio-driven video generation.]</p>
+    <h1 class="h1">AURA<span class="accent">:</span><br><span style="font-size:.5em;font-weight:700;">AUdio-dRiven streaming Avatar</span></h1>
+    <p class="tagline">Streaming, causal, few-step audio-driven talking-head video generation.</p>
 
-    <!-- EDIT: authors — verify order & affiliations -->
     <p class="authors">
-      <a href="https://www.linkedin.com/in/nathaniel-cohen-6032b7235/">Nathaniel Cohen</a><sup>1</sup>,
+      <a href="https://www.linkedin.com/in/nathaniel-cohen-6032b7235/">Nathaniel Cohen</a><sup>1,2</sup>,
       <a href="https://nicolas-dufour.github.io/">Nicolas Dufour</a><sup>1</sup>,
       <a href="#">Amélie Royer</a><sup>1</sup>,
       <a href="#">Alasdair Newson</a><sup>2</sup>,
@@ -199,25 +197,24 @@ footer{padding:2.5rem 0;text-align:center;color:var(--muted);font-size:.85rem;bo
     </p>
     <p class="affil"><sup>1</sup>Kyutai &nbsp;·&nbsp; <sup>2</sup>Sorbonne Université, ISIR</p>
 
-    <!-- EDIT: links -->
+    <!-- EDIT: add arXiv / Code / Video links once public -->
     <div class="links">
-      <a class="btn" href="#"><i class="fas fa-file-pdf"></i> Paper</a>
+      <a class="btn" href="static/paper/AURA_workshop.pdf"><i class="fas fa-file-pdf"></i> Paper</a>
       <a class="btn ghost" href="#"><i class="ai ai-arxiv"></i> arXiv</a>
       <a class="btn ghost" href="#"><i class="fab fa-github"></i> Code</a>
       <a class="btn ghost" href="#"><i class="fab fa-youtube"></i> Video</a>
     </div>
 
-    <!-- EDIT: three or four headline numbers -->
     <div class="stats">
-      <div class="stat"><div class="num">25 Hz</div><div class="lbl">Real-time streaming</div></div>
-      <div class="stat"><div class="num">&times;N</div><div class="lbl">Faster than [baseline]</div></div>
-      <div class="stat"><div class="num">&infin;</div><div class="lbl">Arbitrary length</div></div>
-      <div class="stat"><div class="num">[?]</div><div class="lbl">[Metric]</div></div>
+      <div class="stat"><div class="num">9.7 FPS</div><div class="lbl">Streaming 720p, 1 GPU</div></div>
+      <div class="stat"><div class="num">17&times;</div><div class="lbl">Faster than teacher</div></div>
+      <div class="stat"><div class="num">4-step</div><div class="lbl">Causal denoising (vs. 50)</div></div>
+      <div class="stat"><div class="num">30K</div><div class="lbl">Synthetic clips released</div></div>
     </div>
 
     <div class="tldr narrow" style="max-width:var(--narrow);">
       <b>TL;DR</b>
-      <p>[One or two sentences summarizing AURA — what it does and why it matters.]</p>
+      <p>AURA distills a 50-step bidirectional teacher into a 4-step causal student for audio-driven video generation. It streams 720p talking-head video chunk-by-chunk at 9.7&nbsp;FPS on a single GPU with a rolling KV cache — matching teacher quality at 17&times; the speed, with no audio look-ahead.</p>
     </div>
   </div>
 </header>
@@ -231,7 +228,7 @@ footer{padding:2.5rem 0;text-align:center;color:var(--muted);font-size:.85rem;bo
       </video>
       <div class="media-ph"><i class="fas fa-film"></i><span>Teaser</span><code>static/videos/teaser.mp4</code></div>
     </div>
-    <p class="caption">[Teaser caption.]</p>
+    <p class="caption">AURA generates 720p talking-head videos at 9.7 FPS on a single GPU in a causal streaming manner, per chunk of 0.64s. Samples generated from the same speech audio with different reference identities and text prompts.</p>
   </div>
 </section>
 
@@ -240,7 +237,7 @@ footer{padding:2.5rem 0;text-align:center;color:var(--muted);font-size:.85rem;bo
   <div class="wrap narrow">
     <p class="eyebrow">Abstract</p>
     <h2 class="title">Overview</h2>
-    <p style="text-align:justify;">[PLACEHOLDER — paste the paper abstract here.]</p>
+    <p style="text-align:justify;">Current audio-driven video diffusion models can synthesize realistic talking-head videos but generally require dozens of diffusion denoising steps over multi-second video chunks, making them unsuitable for streaming applications such as voice assistants and virtual avatars, where low latency and online causal generation are required properties. AURA generates high-resolution video chunk-by-chunk at 9.7&nbsp;fps with a rolling KV cache, requiring only the audio of the current chunk rather than the multi-second audio look-ahead buffered by bidirectional models, making it well-suited to interactive avatar applications. Our two-stage distillation pipeline first aligns the causal student with the teacher, by training it to match the teacher's trajectories with fewer diffusion steps and a chunk-wise causal attention mask, then applies Distribution Matching Distillation (DMD) with backward simulation to close the remaining quality gap. On standard talking-head benchmarks, AURA matches the teacher's quality while running 17&times; faster, achieving 720p avatar streaming on a single GPU. To support reproducibility and further research, we release our model's weights along with a dataset of 30K synthetic videos and their precomputed teacher trajectories.</p>
   </div>
 </section>
 
@@ -253,11 +250,16 @@ footer{padding:2.5rem 0;text-align:center;color:var(--muted);font-size:.85rem;bo
       <img src="static/images/method.png" alt="Method overview">
       <div class="media-ph"><i class="fas fa-diagram-project"></i><span>Method figure</span><code>static/images/method.png</code></div>
     </div>
-    <p class="caption">Figure 1. Overview of the AURA pipeline.</p>
+    <p class="caption">Figure 3. Two-stage distillation pipeline. Stage 1 (ODE teacher forcing) regresses the causal student onto the frozen teacher's multi-step ODE trajectory. Stage 2 (backward-simulation DMD) unrolls the student without gradients, then matches teacher and critic scores on the student's own trajectory.</p>
     <div class="steps">
-      <div class="step"><div class="n">1</div><div><h4>[Streaming architecture]</h4><p>[Short description of the core design.]</p></div></div>
-      <div class="step"><div class="n">2</div><div><h4>[Training / distillation]</h4><p>[Short description of how it is trained.]</p></div></div>
-      <div class="step"><div class="n">3</div><div><h4>[Real-time inference]</h4><p>[Short description of the inference-time behaviour.]</p></div></div>
+      <div class="step"><div class="n">1</div><div><h4>Chunked causal architecture</h4><p>Three modifications turn TalkVerse's 50-step bidirectional teacher (5B params) into a 4-step causal student: block-wise causal attention over chunks of 4 latent frames (&sim;0.64s), no motion-frame conditioning (the KV cache already carries temporal context), and per-chunk mixed diffusion timesteps.</p></div></div>
+      <div class="step"><div class="n">2</div><div><h4>Two-stage distillation</h4><p>Stage 1 regresses the student onto the teacher's ODE trajectories (5 timesteps, 30K synthetic clips) via MSE. Stage 2 applies Distribution Matching Distillation with backward simulation — training on the student's own rollout states — to close the remaining few-step quality gap.</p></div></div>
+      <div class="step"><div class="n">3</div><div><h4>Rolling KV cache inference</h4><p>The student streams one chunk at a time with 4 denoising steps. Mixed-timestep training lets each past chunk be cached once; a rolling window keeps only a fixed identity anchor (first chunk) and the most recent chunk, giving constant memory regardless of video length.</p></div></div>
+    </div>
+
+    <div class="grid g2" style="margin-top:1.8rem;">
+      <div><div class="media"><img src="static/images/attention_mask.png" alt="Sliding-window causal attention mask"><div class="media-ph"><i class="fas fa-diagram-project"></i><span>Attention mask</span><code>static/images/attention_mask.png</code></div></div><p class="caption">Figure 2 (left). Sliding-window causal attention mask (training). Each chunk of 4 latent frames attends to itself, the preceding chunk, and the initial chunk as an attention sink.</p></div>
+      <div><div class="media"><img src="static/images/kv_cache.png" alt="KV caching with and without per-chunk mixed timesteps"><div class="media-ph"><i class="fas fa-diagram-project"></i><span>KV cache</span><code>static/images/kv_cache.png</code></div></div><p class="caption">Figure 2 (right). KV caching with and without per-chunk mixed timesteps: naive caching scales memory with the number of denoising steps T; mixed-timestep training shares one cache across all steps (O(1) memory).</p></div>
     </div>
   </div>
 </section>
@@ -267,7 +269,7 @@ footer{padding:2.5rem 0;text-align:center;color:var(--muted);font-size:.85rem;bo
   <div class="wrap">
     <p class="eyebrow" style="text-align:center;">Results</p>
     <h2 class="title" style="text-align:center;">AURA in action</h2>
-    <p class="caption" style="margin-bottom:1.6rem;">Unmute any clip to play with audio.</p>
+    <p class="caption" style="margin-bottom:1.6rem;">Samples from the HALLO3 Test and CelebV-HQ Test benchmarks. Unmute any clip to play with audio.</p>
     <div class="grid g3">
       <div><div class="media portrait"><video muted loop playsinline controls preload="metadata"><source src="static/videos/results/01.mp4" type="video/mp4"></video><div class="media-ph"><i class="fas fa-play"></i><code>results/01.mp4</code></div></div></div>
       <div><div class="media portrait"><video muted loop playsinline controls preload="metadata"><source src="static/videos/results/02.mp4" type="video/mp4"></video><div class="media-ph"><i class="fas fa-play"></i><code>results/02.mp4</code></div></div></div>
@@ -284,7 +286,7 @@ footer{padding:2.5rem 0;text-align:center;color:var(--muted);font-size:.85rem;bo
   <div class="wrap">
     <p class="eyebrow" style="text-align:center;">Comparisons</p>
     <h2 class="title" style="text-align:center;">Versus baselines</h2>
-    <p class="caption" style="margin-bottom:1.6rem;">Playback is synchronized across all methods. Switch test set and sample below.</p>
+    <p class="caption" style="margin-bottom:1.6rem;">AURA vs. its teacher TalkVerse (5B, 50-step) and prior streaming/non-causal baselines. Playback is synchronized across all methods. Switch test set and sample below.</p>
 
     <div class="cmp-bar">
       <div><span class="cmp-label">Test set</span><span id="cmp-sets" class="tabs" style="display:inline-flex;"></span></div>
@@ -300,34 +302,163 @@ footer{padding:2.5rem 0;text-align:center;color:var(--muted);font-size:.85rem;bo
   </div>
 </section>
 
+<!-- ================= QUANTITATIVE ================= -->
+<section id="quant">
+  <div class="wrap">
+    <p class="eyebrow">Quantitative</p>
+    <h2 class="title">Main results &amp; metrics</h2>
+    <p class="caption" style="margin-bottom:1.4rem;text-align:left;">FID, FVD and JEDi (visual quality; FVD/JEDi averaged over three temporal offsets to probe inter-chunk discontinuities), Sync-C/D (lip-sync), CSIM (identity via ArcFace), and warping error (WE, temporal consistency via RAFT). All fps on a single H100 GPU. <b>Bold</b>: best; <u>underlined</u>: second best.</p>
+
+    <p class="caption" style="text-align:left;font-weight:600;color:var(--ink);margin-bottom:.4rem;">Table 1 &mdash; HALLO3 Test (100 clips, 10s, real English speech)</p>
+    <div class="tablewrap" style="margin-bottom:1.6rem;">
+      <table>
+        <thead><tr><th>Method</th><th>Params</th><th>Res</th><th>Steps</th><th>DiT/VAE fps &uarr;</th><th>Total fps &uarr;</th><th>FID &darr;</th><th>FVD &darr;</th><th>JEDi &darr;</th><th>CSIM &uarr;</th><th>Sync-C &uarr;</th><th>Sync-D &darr;</th><th>WE &darr;</th></tr></thead>
+        <tbody>
+          <tr><td>Hallo3</td><td>14.5B</td><td>480p</td><td>50</td><td>0.24/3.2</td><td>0.22</td><td><b>43.1</b></td><td><u>186.3</u></td><td><b>0.16</b></td><td>0.74</td><td><u>5.06</u></td><td>9.9</td><td>0.0036</td></tr>
+          <tr><td>Wan-S2V</td><td>14B</td><td>720p</td><td>40</td><td>0.08/6.7</td><td>0.08</td><td>55.2</td><td>200.5</td><td><u>0.27</u></td><td>0.71</td><td><b>5.40</b></td><td><b>9.0</b></td><td>0.0032</td></tr>
+          <tr><td>TalkVerse (teacher)</td><td>5B</td><td>720p</td><td>50</td><td>0.69/7.4</td><td>0.58</td><td>55.7</td><td>215.5</td><td>0.42</td><td>0.74</td><td>3.82</td><td>10.5</td><td><b>0.0019</b></td></tr>
+          <tr><td>Live Avatar</td><td>14B</td><td>480p</td><td>4</td><td>8.4/4.3</td><td>1.9</td><td><u>50.8</u></td><td><b>182.7</b></td><td>0.47</td><td><u>0.77</u></td><td>4.90</td><td><u>9.3</u></td><td>0.0039</td></tr>
+          <tr class="ours"><td>AURA (ours)</td><td>5B</td><td>720p</td><td>4</td><td>19.7/22.7</td><td><u>9.7</u></td><td>56.2</td><td>191.0</td><td>0.37</td><td><b>0.80</b></td><td>4.17</td><td>9.97</td><td>0.0034</td></tr>
+          <tr><td>AURA (3 steps)</td><td>5B</td><td>720p</td><td>3</td><td>26.0/22.7</td><td><b>11.2</b></td><td>56.5</td><td>199.7</td><td>0.37</td><td><u>0.77</u></td><td>4.27</td><td>9.85</td><td>0.0033</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="caption" style="text-align:left;font-weight:600;color:var(--ink);margin-bottom:.4rem;">Table 2 &mdash; CelebV-HQ Test (150 clips, 8&ndash;20s, TTS-synthesized speech)</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Method</th><th>Params</th><th>Res</th><th>Steps</th><th>DiT/VAE fps &uarr;</th><th>Total fps &uarr;</th><th>FID &darr;</th><th>FVD &darr;</th><th>JEDi &darr;</th><th>CSIM &uarr;</th><th>Sync-C &uarr;</th><th>Sync-D &darr;</th><th>WE &darr;</th></tr></thead>
+        <tbody>
+          <tr><td>Hallo3</td><td>14.5B</td><td>480p</td><td>50</td><td>0.24/3.2</td><td>0.22</td><td><b>36.0</b></td><td>208.0</td><td><b>0.257</b></td><td>0.71</td><td><b>6.20</b></td><td>9.4</td><td><b>0.0038</b></td></tr>
+          <tr><td>Wan-S2V</td><td>14B</td><td>720p</td><td>40</td><td>0.08/6.7</td><td>0.08</td><td>46.7</td><td>293.7</td><td>0.640</td><td>0.62</td><td><b>6.20</b></td><td><u>8.9</u></td><td>0.0061</td></tr>
+          <tr><td>TalkVerse (teacher)</td><td>5B</td><td>720p</td><td>50</td><td>0.69/7.4</td><td>0.58</td><td>56.3</td><td>262.9</td><td>0.600</td><td>0.59</td><td>4.80</td><td>10.5</td><td>0.0059</td></tr>
+          <tr><td>Live Avatar</td><td>14B</td><td>480p</td><td>4</td><td>8.4/4.3</td><td>1.9</td><td><u>43.1</u></td><td><u>272.9</u></td><td>1.087</td><td><u>0.67</u></td><td>5.90</td><td>9.2</td><td>0.0057</td></tr>
+          <tr class="ours"><td>AURA (ours)</td><td>5B</td><td>720p</td><td>4</td><td>19.7/22.7</td><td><u>9.7</u></td><td>45.9</td><td><b>218.9</b></td><td>0.477</td><td><b>0.74</b></td><td>4.70</td><td>10.1</td><td>0.0055</td></tr>
+          <tr><td>AURA (3 steps)</td><td>5B</td><td>720p</td><td>3</td><td>26.0/22.7</td><td><b>11.2</b></td><td>44.0</td><td>239.0</td><td><u>0.577</u></td><td>0.65</td><td>4.90</td><td>9.9</td><td>0.0065</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="caption" style="margin-top:1.2rem;">AURA beats its TalkVerse teacher on most quality metrics with only 4 denoising steps instead of 50, and matches the much larger Wan-S2V (14B) on FVD, JEDi and audio-visual alignment. It is the fastest method overall &mdash; 9.7 fps end-to-end, a 17&times; speedup over the teacher (30&times; on the diffusion transformer alone). While Hallo3 tops FID/FVD/JEDi on both test sets, qualitative inspection (Figure 8 in the paper) shows it produces exaggerated mouth motion and recurrent hand artifacts that these distribution-based metrics fail to flag.</p>
+
+    <div class="narrow" style="margin-top:2.4rem;">
+      <p class="caption" style="text-align:left;font-weight:600;color:var(--ink);margin-bottom:.4rem;">User study</p>
+      <p style="text-align:justify;">To assess perceived quality directly, we run an anonymous human evaluation on the Mabyduck platform: 300 pairwise comparisons from 30 raters on the 100 HALLO3 Test clips, comparing AURA against Hallo3 and against the TalkVerse teacher along four axes &mdash; overall visual quality, lip-sync, reference fidelity, and naturalness &mdash; aggregated into per-axis Bayesian Elo scores. AURA is preferred over Hallo3 on all four axes, confirming that Hallo3's distribution-metric lead does not translate into perceived quality. Against the non-causal, 50-step teacher, AURA ranks <i>higher</i> on reference fidelity, on par for lip-sync and naturalness, and only marginally behind on visual quality &mdash; despite being causal and 17&times; faster.</p>
+      <div class="media" style="margin-top:1rem;">
+        <img src="static/images/user_study.png" alt="Bayesian Elo across four evaluation axes">
+        <div class="media-ph"><i class="fas fa-chart-simple"></i><span>User study</span><code>static/images/user_study.png</code></div>
+      </div>
+      <p class="caption">Figure 4. Human preference study: per-axis Bayesian Elo (&uarr;) from 300 pairwise comparisons by 30 raters on the HALLO3 Test clips; error bars are 95% CIs.</p>
+    </div>
+  </div>
+</section>
+
 <!-- ================= ABLATIONS ================= -->
 <section id="ablations" class="alt">
   <div class="wrap">
     <p class="eyebrow" style="text-align:center;">Ablations</p>
     <h2 class="title" style="text-align:center;">Ablation studies</h2>
-    <div class="grid g3">
-      <div><div class="media portrait"><video muted loop playsinline controls preload="metadata"><source src="static/videos/ablations/a.mp4" type="video/mp4"></video><div class="media-ph"><i class="fas fa-flask"></i><code>ablations/a.mp4</code></div></div><p class="caption">[Ablation A]</p></div>
-      <div><div class="media portrait"><video muted loop playsinline controls preload="metadata"><source src="static/videos/ablations/b.mp4" type="video/mp4"></video><div class="media-ph"><i class="fas fa-flask"></i><code>ablations/b.mp4</code></div></div><p class="caption">[Ablation B]</p></div>
-      <div><div class="media portrait"><video muted loop playsinline controls preload="metadata"><source src="static/videos/ablations/c.mp4" type="video/mp4"></video><div class="media-ph"><i class="fas fa-flask"></i><code>ablations/c.mp4</code></div></div><p class="caption">[Ablation C]</p></div>
-    </div>
-  </div>
-</section>
+    <p class="caption" style="margin-bottom:1.6rem;">All ablations use the 5B student trained on the full pipeline, evaluated on the HALLO3 Test set with shorter 6.3s clips to reduce compute (vs. the 10s clips used in the main results above). Best value per column in <b>bold</b>.</p>
 
-<!-- ================= QUANTITATIVE ================= -->
-<section id="quant">
-  <div class="wrap narrow">
-    <p class="eyebrow">Quantitative</p>
-    <h2 class="title">User study &amp; metrics</h2>
-    <p class="caption" style="margin-bottom:1rem;text-align:left;">[Describe the study — e.g. pairwise comparisons, Bayesian Elo. Best in <b>bold</b>.]</p>
-    <div class="tablewrap">
+    <p class="caption" style="text-align:left;font-weight:600;color:var(--ink);margin-bottom:.4rem;">Table 3 &mdash; Number of diffusion steps per chunk</p>
+    <div class="tablewrap" style="margin-bottom:1rem;">
       <table>
-        <thead><tr><th>Method</th><th>[Metric 1] &uarr;</th><th>[Metric 2] &uarr;</th><th>[Metric 3] &darr;</th><th>FPS &uarr;</th></tr></thead>
+        <thead><tr><th>#Steps</th><th>FID &darr;</th><th>FVD &darr;</th><th>JEDi &darr;</th><th>CSIM &uarr;</th><th>Sync-C &uarr;</th><th>Sync-D &darr;</th><th>WE &darr;</th><th>DiT fps &uarr;</th></tr></thead>
         <tbody>
-          <tr><td>[Baseline A]</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td></tr>
-          <tr><td>[Baseline B]</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td></tr>
-          <tr class="ours"><td>AURA (ours)</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td></tr>
+          <tr class="ours"><td>4 (default)</td><td>57.2</td><td>191.0</td><td><b>0.37</b></td><td><b>0.80</b></td><td>4.09</td><td>10.02</td><td>0.0034</td><td>19.7</td></tr>
+          <tr><td>3</td><td>57.4</td><td>199.7</td><td><b>0.37</b></td><td>0.77</td><td>4.18</td><td><b>9.91</b></td><td><b>0.0033</b></td><td>26.0</td></tr>
+          <tr><td>2</td><td>57.7</td><td>200.1</td><td>0.42</td><td><b>0.80</b></td><td>4.18</td><td>9.93</td><td>0.0032</td><td>38.5</td></tr>
+          <tr><td>1</td><td><b>60.2</b></td><td><b>231.7</b></td><td>0.65</td><td>0.65</td><td><b>4.09</b></td><td>9.77</td><td>0.0031</td><td><b>75.8</b></td></tr>
         </tbody>
       </table>
+    </div>
+    <p class="caption" style="margin-bottom:1rem;">Quality degrades gradually from 4 to 2 steps and drops sharply at 1 step; lip-sync stays roughly constant. Warp error looks better with fewer steps, but this reflects blurrier, lower-detail outputs rather than a real gain &mdash; not a genuine improvement in temporal consistency.</p>
+    <div class="narrow" style="max-width:280px;margin:0 auto 2.2rem;">
+      <div class="media portrait">
+        <video muted loop playsinline controls preload="metadata"><source src="static/videos/ablations/steps.mp4" type="video/mp4"></video>
+        <div class="media-ph"><i class="fas fa-flask"></i><code>ablations/steps.mp4</code></div>
+      </div>
+      <p class="caption">Same clip generated with 1, 2, 3 and 4 denoising steps.</p>
+    </div>
+
+    <p class="caption" style="text-align:left;font-weight:600;color:var(--ink);margin-bottom:.4rem;">Table 4 &mdash; Stage 1 only vs. Stage 1 + Stage 2 (DMD)</p>
+    <div class="tablewrap" style="margin-bottom:1rem;">
+      <table>
+        <thead><tr><th>Variant</th><th>FID &darr;</th><th>FVD &darr;</th><th>JEDi &darr;</th><th>CSIM &uarr;</th><th>Sync-C &uarr;</th><th>Sync-D &darr;</th><th>WE &darr;</th></tr></thead>
+        <tbody>
+          <tr><td>Stage 1 only</td><td><b>73.0</b></td><td><b>267.0</b></td><td><b>0.75</b></td><td>0.55</td><td>3.36</td><td><b>10.17</b></td><td><b>0.0026</b></td></tr>
+          <tr class="ours"><td>Stage 1 + Stage 2</td><td>57.2</td><td>191.0</td><td>0.37</td><td><b>0.80</b></td><td><b>4.09</b></td><td>10.02</td><td>0.0034</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="caption" style="margin-bottom:1rem;">Adding the DMD stage substantially improves perceptual quality (FID, FVD, JEDi), identity preservation (CSIM), and lip-sync &mdash; Stage 1 alone cannot close the few-step gap to the teacher.</p>
+    <div class="narrow" style="max-width:280px;margin:0 auto 2.2rem;">
+      <div class="media portrait">
+        <video muted loop playsinline controls preload="metadata"><source src="static/videos/ablations/stage.mp4" type="video/mp4"></video>
+        <div class="media-ph"><i class="fas fa-flask"></i><code>ablations/stage.mp4</code></div>
+      </div>
+      <p class="caption">Same clip with Stage 1 only vs. the full Stage 1 + Stage 2 pipeline.</p>
+    </div>
+
+    <p class="caption" style="text-align:left;font-weight:600;color:var(--ink);margin-bottom:.4rem;">Table 5 &mdash; KV cache refresh with an additional inference step</p>
+    <div class="tablewrap" style="margin-bottom:1rem;">
+      <table>
+        <thead><tr><th>Variant</th><th>FID &darr;</th><th>FVD &darr;</th><th>JEDi &darr;</th><th>CSIM &uarr;</th><th>Sync-C &uarr;</th><th>Warp &darr;</th><th>DiT fps &uarr;</th></tr></thead>
+        <tbody>
+          <tr class="ours"><td>4 steps (default)</td><td>57.2</td><td><b>191.0</b></td><td><b>0.37</b></td><td><b>0.80</b></td><td>4.09</td><td>0.0034</td><td><b>19.7</b></td></tr>
+          <tr><td>5-step (t=0 refresh)</td><td>56.6</td><td>197.7</td><td><b>0.37</b></td><td>0.79</td><td>4.03</td><td>0.0035</td><td>15.6</td></tr>
+          <tr><td>5-step (t=50 refresh)</td><td>54.9</td><td>196.1</td><td>0.40</td><td>0.78</td><td>4.08</td><td>0.0036</td><td>15.6</td></tr>
+          <tr><td>5-step (t=50, used)</td><td><b>53.6</b></td><td>198.3</td><td>0.40</td><td>0.77</td><td><b>4.11</b></td><td>0.0037</td><td>15.6</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="caption" style="margin-bottom:1rem;">None of the refresh variants consistently beats the simpler 4-step default once the added inference cost is accounted for, so AURA keeps the 4-step design.</p>
+    <div class="narrow" style="max-width:280px;margin:0 auto 2.2rem;">
+      <div class="media portrait">
+        <video muted loop playsinline controls preload="metadata"><source src="static/videos/ablations/kv_refresh.mp4" type="video/mp4"></video>
+        <div class="media-ph"><i class="fas fa-flask"></i><code>ablations/kv_refresh.mp4</code></div>
+      </div>
+      <p class="caption">Same clip across the 4-step default and the 5-step KV cache refresh variants.</p>
+    </div>
+
+    <p class="caption" style="text-align:left;font-weight:600;color:var(--ink);margin-bottom:.4rem;">Table 9 &mdash; Rolling cache window size</p>
+    <div class="tablewrap" style="margin-bottom:1rem;">
+      <table>
+        <thead><tr><th>Variant</th><th>FID &darr;</th><th>FVD &darr;</th><th>JEDi &darr;</th><th>CSIM &uarr;</th><th>Sync-C &uarr;</th><th>WE &darr;</th><th>DiT fps &uarr;</th></tr></thead>
+        <tbody>
+          <tr class="ours"><td>n=1 (default)</td><td><b>57.2</b></td><td><b>191.0</b></td><td><b>0.37</b></td><td><b>0.80</b></td><td><b>4.09</b></td><td>0.0034</td><td><b>20</b></td></tr>
+          <tr><td>n=2</td><td>57.8</td><td>200.8</td><td>0.44</td><td>0.79</td><td>4.00</td><td><b>0.0037</b></td><td>18</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="caption" style="margin-bottom:1rem;">Retaining a second past chunk (n=2) in the rolling cache, on top of the first-chunk identity anchor, improves no metric while increasing cache size and lowering throughput &mdash; AURA keeps a single-chunk window.</p>
+    <div class="narrow" style="max-width:280px;margin:0 auto 2.2rem;">
+      <div class="media portrait">
+        <video muted loop playsinline controls preload="metadata"><source src="static/videos/ablations/window_size.mp4" type="video/mp4"></video>
+        <div class="media-ph"><i class="fas fa-flask"></i><code>ablations/window_size.mp4</code></div>
+      </div>
+      <p class="caption">Same clip with a single-chunk (n=1) vs. two-chunk (n=2) rolling cache window.</p>
+    </div>
+
+    <p class="caption" style="text-align:left;font-weight:600;color:var(--ink);margin-bottom:.4rem;">Table 8 &mdash; Long-form streaming stability</p>
+    <div class="tablewrap" style="margin-bottom:1rem;">
+      <table>
+        <thead><tr><th>Metric</th><th>0&ndash;10s</th><th>10&ndash;20s</th><th>20&ndash;30s</th><th>30&ndash;40s</th><th>40&ndash;50s</th><th>50&ndash;60s</th><th>Mean</th></tr></thead>
+        <tbody>
+          <tr><td>FVD &darr;</td><td>186.7</td><td>189.6</td><td>181.2</td><td>189.7</td><td>189.3</td><td>187.7</td><td><b>187.4</b></td></tr>
+          <tr><td>CSIM &uarr;</td><td>0.784</td><td>0.779</td><td>0.767</td><td>0.758</td><td>0.713</td><td>0.754</td><td><b>0.759</b></td></tr>
+          <tr><td>Sync-C &uarr;</td><td>4.81</td><td>4.99</td><td>4.85</td><td>4.67</td><td>4.46</td><td>4.65</td><td><b>4.74</b></td></tr>
+          <tr><td>Warp &darr; (&times;10<sup>-3</sup>)</td><td>3.82</td><td>3.80</td><td>3.78</td><td>3.67</td><td>4.30</td><td>3.78</td><td><b>3.86</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="caption" style="margin-bottom:1rem;">AURA (4 steps) generates 60s of video per HALLO3 Test reference (100 clips), with metrics computed per consecutive 10s segment. All metrics fluctuate only marginally with no monotonic trend across the six segments &mdash; no systematic identity drift or accumulating chunk-boundary artifacts at the minute scale, confirming the rolling KV cache sustains quality over an unbounded stream at constant memory.</p>
+    <div class="narrow" style="max-width:280px;margin:0 auto;">
+      <div class="media portrait">
+        <video muted loop playsinline controls preload="metadata"><source src="static/videos/ablations/long_form.mp4" type="video/mp4"></video>
+        <div class="media-ph"><i class="fas fa-flask"></i><code>ablations/long_form.mp4</code></div>
+      </div>
+      <p class="caption">Full 60s continuous streaming generation from a single HALLO3 Test reference.</p>
     </div>
   </div>
 </section>
@@ -340,7 +471,7 @@ footer{padding:2.5rem 0;text-align:center;color:var(--muted);font-size:.85rem;bo
     <div class="bibbox">
       <button class="copybtn" id="copybtn">Copy</button>
       <pre class="bibtex" id="bib">@inproceedings{cohen2026aura,
-  title     = {AURA: [Full Paper Title]},
+  title     = {{AURA}: {AU}dio-d{R}iven streaming {A}vatar},
   author    = {Cohen, Nathaniel and Dufour, Nicolas and Royer, Am{\'e}lie
                and Newson, Alasdair and P{\'e}rez, Patrick},
   booktitle = {British Machine Vision Conference (BMVC)},
@@ -352,8 +483,7 @@ footer{padding:2.5rem 0;text-align:center;color:var(--muted);font-size:.85rem;bo
 
 <footer>
   <div class="wrap narrow">
-    <p>[Acknowledgements go here.]</p>
-    <p style="margin-top:.6rem;">Icons by <a href="https://fontawesome.com/">Font Awesome</a> &amp; <a href="https://jpswalsh.github.io/academicons/">Academicons</a>. Built with vanilla HTML / CSS / JS.</p>
+    <p>Icons by <a href="https://fontawesome.com/">Font Awesome</a> &amp; <a href="https://jpswalsh.github.io/academicons/">Academicons</a>. Built with vanilla HTML / CSS / JS.</p>
   </div>
 </footer>
 
@@ -394,26 +524,32 @@ document.getElementById('copybtn').addEventListener('click',function(){
    The "ours" flag highlights AURA. Videos play muted & synchronized.
    ==================================================================== */
 const COMPARE={
-  "HDTF":[
+  "HALLO3 Test":[
     {name:"Sample 1",methods:[
-      {label:"Input",     src:"static/videos/vs/hdtf/s1/input.mp4"},
-      {label:"AURA (ours)",src:"static/videos/vs/hdtf/s1/ours.mp4",ours:true},
-      {label:"Baseline A", src:"static/videos/vs/hdtf/s1/baseline_a.mp4"},
-      {label:"Baseline B", src:"static/videos/vs/hdtf/s1/baseline_b.mp4"}
+      {label:"Input",       src:"static/videos/vs/hallo3/s1/input.mp4"},
+      {label:"AURA (ours)", src:"static/videos/vs/hallo3/s1/aura.mp4",ours:true},
+      {label:"TalkVerse (teacher)", src:"static/videos/vs/hallo3/s1/talkverse.mp4"},
+      {label:"Live Avatar", src:"static/videos/vs/hallo3/s1/live_avatar.mp4"},
+      {label:"Hallo3",      src:"static/videos/vs/hallo3/s1/hallo3.mp4"},
+      {label:"Wan-S2V",     src:"static/videos/vs/hallo3/s1/wan_s2v.mp4"}
     ]},
     {name:"Sample 2",methods:[
-      {label:"Input",     src:"static/videos/vs/hdtf/s2/input.mp4"},
-      {label:"AURA (ours)",src:"static/videos/vs/hdtf/s2/ours.mp4",ours:true},
-      {label:"Baseline A", src:"static/videos/vs/hdtf/s2/baseline_a.mp4"},
-      {label:"Baseline B", src:"static/videos/vs/hdtf/s2/baseline_b.mp4"}
+      {label:"Input",       src:"static/videos/vs/hallo3/s2/input.mp4"},
+      {label:"AURA (ours)", src:"static/videos/vs/hallo3/s2/aura.mp4",ours:true},
+      {label:"TalkVerse (teacher)", src:"static/videos/vs/hallo3/s2/talkverse.mp4"},
+      {label:"Live Avatar", src:"static/videos/vs/hallo3/s2/live_avatar.mp4"},
+      {label:"Hallo3",      src:"static/videos/vs/hallo3/s2/hallo3.mp4"},
+      {label:"Wan-S2V",     src:"static/videos/vs/hallo3/s2/wan_s2v.mp4"}
     ]}
   ],
-  "Hallo3":[
+  "CelebV-HQ Test":[
     {name:"Sample 1",methods:[
-      {label:"Input",     src:"static/videos/vs/hallo3/s1/input.mp4"},
-      {label:"AURA (ours)",src:"static/videos/vs/hallo3/s1/ours.mp4",ours:true},
-      {label:"Baseline A", src:"static/videos/vs/hallo3/s1/baseline_a.mp4"},
-      {label:"Baseline B", src:"static/videos/vs/hallo3/s1/baseline_b.mp4"}
+      {label:"Input",       src:"static/videos/vs/celebvhq/s1/input.mp4"},
+      {label:"AURA (ours)", src:"static/videos/vs/celebvhq/s1/aura.mp4",ours:true},
+      {label:"TalkVerse (teacher)", src:"static/videos/vs/celebvhq/s1/talkverse.mp4"},
+      {label:"Live Avatar", src:"static/videos/vs/celebvhq/s1/live_avatar.mp4"},
+      {label:"Hallo3",      src:"static/videos/vs/celebvhq/s1/hallo3.mp4"},
+      {label:"Wan-S2V",     src:"static/videos/vs/celebvhq/s1/wan_s2v.mp4"}
     ]}
   ]
 };
