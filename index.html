@@ -723,11 +723,12 @@
       <p class="authors">
         <a href="https://www.linkedin.com/in/nathaniel-cohen-6032b7235/">Nathaniel Cohen</a><sup>1,2</sup>,
         <a href="https://nicolas-dufour.github.io/">Nicolas Dufour</a><sup>1</sup>,
-        <a href="#">Amélie Royer</a><sup>1</sup>,
-        <a href="#">Alasdair Newson</a><sup>2</sup>,
+        <a href="https://ameroyer.github.io">Amélie Royer</a><sup>1</sup>,
+        <a href="https://sites.google.com/site/alasdairnewson/home?authuser=0">Alasdair Newson</a><sup>2</sup>,
         <a href="https://ptrckprz.github.io/">Patrick Pérez</a><sup>1</sup>
       </p>
-      <p class="affil"><sup>1</sup>Kyutai &nbsp;·&nbsp; <sup>2</sup>Sorbonne Université, ISIR</p>
+      <p class="affil"><sup>1</sup><a href="https://kyutai.org">Kyutai</a> &nbsp;·&nbsp; <sup>2</sup>Sorbonne Université,
+        ISIR</p>
 
       <!-- EDIT: add arXiv / Code / Video links once public -->
       <div class="links">
@@ -915,21 +916,24 @@
           </div>
         </div>
         <div>
-          <div class="media portrait"><video muted loop playsinline controls preload="metadata">
+          <div class="media portrait"><video muted loop playsinline controls preload="metadata"
+              poster="static/videos/results/04.jpg">
               <source src="static/videos/results/04.mp4" type="video/mp4">
             </video>
             <div class="media-ph"><i class="fas fa-play"></i><code>results/04.mp4</code></div>
           </div>
         </div>
         <div>
-          <div class="media portrait"><video muted loop playsinline controls preload="metadata">
+          <div class="media portrait"><video muted loop playsinline controls preload="metadata"
+              poster="static/videos/results/05.jpg">
               <source src="static/videos/results/05.mp4" type="video/mp4">
             </video>
             <div class="media-ph"><i class="fas fa-play"></i><code>results/05.mp4</code></div>
           </div>
         </div>
         <div>
-          <div class="media portrait"><video muted loop playsinline controls preload="metadata">
+          <div class="media portrait"><video muted loop playsinline controls preload="metadata"
+              poster="static/videos/results/06.jpg">
               <source src="static/videos/results/06.mp4" type="video/mp4">
             </video>
             <div class="media-ph"><i class="fas fa-play"></i><code>results/06.mp4</code></div>
@@ -1690,15 +1694,18 @@
     const COMPARE = {
       "HALLO3 Test": [
         {
-          // TODO: add Input, Live Avatar, Hallo3, Wan-S2V for this sample once available
           name: "Sample 1", methods: [
+            { label: "Input", src: "static/images/vs/hallo3/s1/input.jpg", img: true },
             { label: "AURA (ours)", src: "static/videos/vs/hallo3/s1/aura.mp4", ours: true },
-            { label: "TalkVerse (teacher)", src: "static/videos/vs/hallo3/s1/talkverse.mp4" }
+            { label: "TalkVerse (teacher)", src: "static/videos/vs/hallo3/s1/talkverse.mp4" },
+            { label: "Live Avatar", src: "static/videos/vs/hallo3/s1/live_avatar.mp4" },
+            { label: "Hallo3", src: "static/videos/vs/hallo3/s1/hallo3.mp4" },
+            { label: "Wan-S2V", src: "static/videos/vs/hallo3/s1/wan_s2v.mp4" }
           ]
         },
         {
           name: "Sample 2", methods: [
-            { label: "Input", src: "static/videos/vs/hallo3/s2/input.mp4" },
+            { label: "Input", src: "static/images/vs/hallo3/s2/input.jpg", img: true },
             { label: "AURA (ours)", src: "static/videos/vs/hallo3/s2/aura.mp4", ours: true },
             { label: "TalkVerse (teacher)", src: "static/videos/vs/hallo3/s2/talkverse.mp4" },
             { label: "Live Avatar", src: "static/videos/vs/hallo3/s2/live_avatar.mp4" },
@@ -1710,7 +1717,7 @@
       "CelebV-HQ Test": [
         {
           name: "Sample 1", methods: [
-            { label: "Input", src: "static/videos/vs/celebvhq/s1/input.mp4" },
+            { label: "Input", src: "static/images/vs/celebvhq/s1/input.jpg", img: true },
             { label: "AURA (ours)", src: "static/videos/vs/celebvhq/s1/aura.mp4", ours: true },
             { label: "TalkVerse (teacher)", src: "static/videos/vs/celebvhq/s1/talkverse.mp4" },
             { label: "Live Avatar", src: "static/videos/vs/celebvhq/s1/live_avatar.mp4" },
@@ -1724,7 +1731,7 @@
     const setsEl = document.getElementById('cmp-sets'), sampEl = document.getElementById('cmp-samples'),
       gridEl = document.getElementById('cmp-grid'), playBtn = document.getElementById('cmp-play'),
       muteBtn = document.getElementById('cmp-mute'), seek = document.getElementById('cmp-seek');
-    let curSet = Object.keys(COMPARE)[0], curSample = 0, vids = [], master = null, cmpUnmuted = false;
+    let curSet = Object.keys(COMPARE)[0], curSample = 0, vids = [], master = null, audioVid = null, cmpUnmuted = false;
 
     function buildTabs() {
       setsEl.innerHTML = ''; Object.keys(COMPARE).forEach(k => {
@@ -1739,9 +1746,19 @@
     function render() {
       buildTabs();
       const methods = COMPARE[curSet][curSample].methods;
-      gridEl.innerHTML = ''; vids = [];
+      gridEl.innerHTML = ''; vids = []; audioVid = null;
       methods.forEach(m => {
         const cell = document.createElement('div'); cell.className = 'cell';
+        if (m.img) {
+          // Reference image (e.g. "Input"): no ground-truth video exists for this
+          // audio, so it's shown as a static photo — not synced, played, or muted.
+          cell.innerHTML =
+            '<div class="media portrait"><img src="' + m.src + '" alt="' + m.label + ' reference image">' +
+            '<div class="media-ph"><i class="fas fa-image"></i><code>' + m.src.split('/').pop() + '</code></div></div>' +
+            '<div class="clabel">' + m.label + '</div>';
+          gridEl.appendChild(cell);
+          return;
+        }
         const poster = m.src.replace(/\.mp4$/, '.jpg');
         cell.innerHTML =
           '<div class="media portrait"><video muted loop playsinline preload="metadata" poster="' + poster + '">' +
@@ -1749,11 +1766,16 @@
           '<div class="media-ph"><i class="fas fa-play"></i><code>' + m.src.split('/').pop() + '</code></div></div>' +
           '<div class="clabel' + (m.ours ? ' ours' : '') + '">' + m.label + '</div>';
         gridEl.appendChild(cell);
-        vids.push(cell.querySelector('video'));
+        const vid = cell.querySelector('video');
+        vids.push(vid);
+        // Unmute targets AURA specifically (always a real clip), not just
+        // vids[0], since that could be a not-yet-available baseline.
+        if (m.ours) audioVid = vid;
       });
       wireMedia(gridEl);
       master = vids[0] || null;
-      if (master) master.muted = !cmpUnmuted;
+      if (!audioVid) audioVid = master;
+      if (audioVid) audioVid.muted = !cmpUnmuted;
       vids.forEach(v => { v.play().catch(() => { }); });
       if (master) {
         master.addEventListener('timeupdate', syncTick);
@@ -1776,7 +1798,7 @@
     seek.oninput = () => { vids.forEach(v => { if (isFinite(v.duration)) v.currentTime = +seek.value; }); };
     muteBtn.onclick = () => {
       cmpUnmuted = !cmpUnmuted;
-      if (master) master.muted = !cmpUnmuted;
+      if (audioVid) audioVid.muted = !cmpUnmuted;
       muteBtn.innerHTML = '<i class="fas fa-volume-' + (cmpUnmuted ? 'up' : 'mute') + '"></i>';
     };
     render();
