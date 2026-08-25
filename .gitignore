@@ -1,10 +1,10 @@
 .DS_Store
 
-# Video assets: still deciding hosting strategy (see project notes) — not
-# committed yet. Drop files here for local preview; host externally later
-# and point index.html's <source src> at those URLs.
-static/videos/
-
-# Figure PNGs in static/images/ ARE committed (small, a few hundred KB each).
-# Their vector PDF sources are not — keep those locally for provenance only.
+# Figure PNGs in static/images/ and video clips in static/videos/ ARE committed
+# (actual sizes stayed small — a few hundred KB per image, ~5-13MB per clip).
+# Only the vector PDF sources for figures are excluded — keep those locally
+# for provenance only.
 static/images/*.pdf
+
+# Scratch/rejected clips, not for the site
+static/videos/trash/

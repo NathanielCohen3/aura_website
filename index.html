@@ -534,7 +534,8 @@
       margin-top: 1.2rem;
     }
 
-    .cmp-controls button {
+    .cmp-controls button,
+    .icon-btn {
       background: var(--ink);
       color: #fff;
       border: none;
@@ -544,6 +545,10 @@
       cursor: pointer;
       font-size: .9rem;
       flex: none;
+    }
+
+    .icon-btn:hover {
+      background: var(--accent);
     }
 
     .cmp-controls input[type=range] {
@@ -762,15 +767,27 @@
 
   <!-- ================= TEASER ================= -->
   <section style="padding-top:1.5rem;">
-    <div class="wrap narrow">
-      <!-- TODO: swap back to the <video> below once static/videos/teaser.mp4 is ready
-      <video autoplay muted loop playsinline preload="metadata">
-        <source src="static/videos/teaser.mp4" type="video/mp4">
-      </video>
-      -->
-      <div class="media figure">
-        <img src="static/images/teaser_cr.png" alt="AURA teaser: qualitative samples and speed/quality tradeoff">
-        <div class="media-ph"><i class="fas fa-film"></i><span>Teaser</span><code>static/images/teaser_cr.png</code></div>
+    <div class="wrap">
+      <div class="grid g3" id="teaser-grid">
+        <div class="media"><video muted loop playsinline preload="metadata" poster="static/videos/teaser/1.jpg">
+            <source src="static/videos/teaser/1.mp4" type="video/mp4">
+          </video>
+          <div class="media-ph"><i class="fas fa-film"></i><code>teaser/1.mp4</code></div>
+        </div>
+        <div class="media"><video muted loop playsinline preload="metadata" poster="static/videos/teaser/2.jpg">
+            <source src="static/videos/teaser/2.mp4" type="video/mp4">
+          </video>
+          <div class="media-ph"><i class="fas fa-film"></i><code>teaser/2.mp4</code></div>
+        </div>
+        <div class="media"><video muted loop playsinline preload="metadata" poster="static/videos/teaser/3.jpg">
+            <source src="static/videos/teaser/3.mp4" type="video/mp4">
+          </video>
+          <div class="media-ph"><i class="fas fa-film"></i><code>teaser/3.mp4</code></div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:.7rem;margin-top:1rem;">
+        <button id="teaser-mute" class="icon-btn" aria-label="mute/unmute"><i class="fas fa-volume-mute"></i></button>
+        <span class="caption" style="margin:0;">All three share the same driving audio &mdash; unmute to play it.</span>
       </div>
       <p class="caption">Figure 1. AURA generates 720p talking-head videos at 9.7 FPS on a single GPU in a causal
         streaming manner, per chunk of 0.64s. Samples generated from the same speech audio with different reference
@@ -874,21 +891,24 @@
         Unmute any clip to play with audio.</p>
       <div class="grid g3">
         <div>
-          <div class="media portrait"><video muted loop playsinline controls preload="metadata">
+          <div class="media portrait"><video muted loop playsinline controls preload="metadata"
+              poster="static/videos/results/01.jpg">
               <source src="static/videos/results/01.mp4" type="video/mp4">
             </video>
             <div class="media-ph"><i class="fas fa-play"></i><code>results/01.mp4</code></div>
           </div>
         </div>
         <div>
-          <div class="media portrait"><video muted loop playsinline controls preload="metadata">
+          <div class="media portrait"><video muted loop playsinline controls preload="metadata"
+              poster="static/videos/results/02.jpg">
               <source src="static/videos/results/02.mp4" type="video/mp4">
             </video>
             <div class="media-ph"><i class="fas fa-play"></i><code>results/02.mp4</code></div>
           </div>
         </div>
         <div>
-          <div class="media portrait"><video muted loop playsinline controls preload="metadata">
+          <div class="media portrait"><video muted loop playsinline controls preload="metadata"
+              poster="static/videos/results/03.jpg">
               <source src="static/videos/results/03.mp4" type="video/mp4">
             </video>
             <div class="media-ph"><i class="fas fa-play"></i><code>results/03.mp4</code></div>
@@ -939,8 +959,11 @@
 
       <div class="cmp-controls narrow">
         <button id="cmp-play" aria-label="play/pause"><i class="fas fa-pause"></i></button>
+        <button id="cmp-mute" aria-label="mute/unmute"><i class="fas fa-volume-mute"></i></button>
         <input id="cmp-seek" type="range" min="0" max="100" value="0" step="0.1">
       </div>
+      <p class="caption" style="margin-top:.6rem;">All methods share the same driving audio &mdash; unmute plays the
+        reference track.</p>
     </div>
   </section>
 
@@ -1076,6 +1099,25 @@
             </tr>
           </tbody>
         </table>
+      </div>
+
+      <div class="narrow" style="margin:0 auto 2.4rem;">
+        <p class="caption" style="text-align:left;">AURA (3 steps) samples &mdash; the faster variant from the table
+          above (11.2 fps end-to-end, vs. 9.7 fps for the 4-step default), at a small quality cost.</p>
+        <div class="grid g2">
+          <div class="media portrait"><video muted loop playsinline controls preload="metadata"
+              poster="static/videos/three_step/1.jpg">
+              <source src="static/videos/three_step/1.mp4" type="video/mp4">
+            </video>
+            <div class="media-ph"><i class="fas fa-play"></i><code>three_step/1.mp4</code></div>
+          </div>
+          <div class="media portrait"><video muted loop playsinline controls preload="metadata"
+              poster="static/videos/three_step/2.jpg">
+              <source src="static/videos/three_step/2.mp4" type="video/mp4">
+            </video>
+            <div class="media-ph"><i class="fas fa-play"></i><code>three_step/2.mp4</code></div>
+          </div>
+        </div>
       </div>
 
       <p class="caption" style="text-align:left;font-weight:600;color:var(--ink);margin-bottom:.4rem;">Table 2 &mdash;
@@ -1301,7 +1343,7 @@
         lower-detail outputs rather than a real gain &mdash; not a genuine improvement in temporal consistency.</p>
       <div class="narrow" style="max-width:280px;margin:0 auto 2.2rem;">
         <div class="media portrait">
-          <video muted loop playsinline controls preload="metadata">
+          <video muted loop playsinline controls preload="metadata" poster="static/videos/ablations/steps.jpg">
             <source src="static/videos/ablations/steps.mp4" type="video/mp4">
           </video>
           <div class="media-ph"><i class="fas fa-flask"></i><code>ablations/steps.mp4</code></div>
@@ -1354,7 +1396,7 @@
         to the teacher.</p>
       <div class="narrow" style="max-width:280px;margin:0 auto 2.2rem;">
         <div class="media portrait">
-          <video muted loop playsinline controls preload="metadata">
+          <video muted loop playsinline controls preload="metadata" poster="static/videos/ablations/stage.jpg">
             <source src="static/videos/ablations/stage.mp4" type="video/mp4">
           </video>
           <div class="media-ph"><i class="fas fa-flask"></i><code>ablations/stage.mp4</code></div>
@@ -1426,7 +1468,7 @@
         default once the added inference cost is accounted for, so AURA keeps the 4-step design.</p>
       <div class="narrow" style="max-width:280px;margin:0 auto 2.2rem;">
         <div class="media portrait">
-          <video muted loop playsinline controls preload="metadata">
+          <video muted loop playsinline controls preload="metadata" poster="static/videos/ablations/kv_refresh.jpg">
             <source src="static/videos/ablations/kv_refresh.mp4" type="video/mp4">
           </video>
           <div class="media-ph"><i class="fas fa-flask"></i><code>ablations/kv_refresh.mp4</code></div>
@@ -1479,7 +1521,7 @@
         AURA keeps a single-chunk window.</p>
       <div class="narrow" style="max-width:280px;margin:0 auto 2.2rem;">
         <div class="media portrait">
-          <video muted loop playsinline controls preload="metadata">
+          <video muted loop playsinline controls preload="metadata" poster="static/videos/ablations/window_size.jpg">
             <source src="static/videos/ablations/window_size.mp4" type="video/mp4">
           </video>
           <div class="media-ph"><i class="fas fa-flask"></i><code>ablations/window_size.mp4</code></div>
@@ -1554,7 +1596,7 @@
         constant memory.</p>
       <div class="narrow" style="max-width:280px;margin:0 auto;">
         <div class="media portrait">
-          <video muted loop playsinline controls preload="metadata">
+          <video muted loop playsinline controls preload="metadata" poster="static/videos/ablations/long_form.jpg">
             <source src="static/videos/ablations/long_form.mp4" type="video/mp4">
           </video>
           <div class="media-ph"><i class="fas fa-flask"></i><code>ablations/long_form.mp4</code></div>
@@ -1618,6 +1660,21 @@
     }
     wireMedia(document);
 
+    /* ---------- teaser grid: synchronized playback (same audio, 3 identities) ---------- */
+    (function () {
+      const vids = [...document.querySelectorAll('#teaser-grid video')];
+      if (!vids.length) return;
+      const master = vids[0], muteBtn = document.getElementById('teaser-mute');
+      vids.forEach(v => { v.play().catch(() => { }); });
+      master.addEventListener('timeupdate', () => {
+        vids.forEach(v => { if (v !== master && Math.abs(v.currentTime - master.currentTime) > 0.15) v.currentTime = master.currentTime; });
+      });
+      muteBtn.onclick = () => {
+        master.muted = !master.muted;
+        muteBtn.innerHTML = '<i class="fas fa-volume-' + (master.muted ? 'mute' : 'up') + '"></i>';
+      };
+    })();
+
     /* ---------- BibTeX copy ---------- */
     document.getElementById('copybtn').addEventListener('click', function () {
       navigator.clipboard.writeText(document.getElementById('bib').innerText).then(() => {
@@ -1633,13 +1690,10 @@
     const COMPARE = {
       "HALLO3 Test": [
         {
+          // TODO: add Input, Live Avatar, Hallo3, Wan-S2V for this sample once available
           name: "Sample 1", methods: [
-            { label: "Input", src: "static/videos/vs/hallo3/s1/input.mp4" },
             { label: "AURA (ours)", src: "static/videos/vs/hallo3/s1/aura.mp4", ours: true },
-            { label: "TalkVerse (teacher)", src: "static/videos/vs/hallo3/s1/talkverse.mp4" },
-            { label: "Live Avatar", src: "static/videos/vs/hallo3/s1/live_avatar.mp4" },
-            { label: "Hallo3", src: "static/videos/vs/hallo3/s1/hallo3.mp4" },
-            { label: "Wan-S2V", src: "static/videos/vs/hallo3/s1/wan_s2v.mp4" }
+            { label: "TalkVerse (teacher)", src: "static/videos/vs/hallo3/s1/talkverse.mp4" }
           ]
         },
         {
@@ -1669,8 +1723,8 @@
 
     const setsEl = document.getElementById('cmp-sets'), sampEl = document.getElementById('cmp-samples'),
       gridEl = document.getElementById('cmp-grid'), playBtn = document.getElementById('cmp-play'),
-      seek = document.getElementById('cmp-seek');
-    let curSet = Object.keys(COMPARE)[0], curSample = 0, vids = [], master = null;
+      muteBtn = document.getElementById('cmp-mute'), seek = document.getElementById('cmp-seek');
+    let curSet = Object.keys(COMPARE)[0], curSample = 0, vids = [], master = null, cmpUnmuted = false;
 
     function buildTabs() {
       setsEl.innerHTML = ''; Object.keys(COMPARE).forEach(k => {
@@ -1688,8 +1742,9 @@
       gridEl.innerHTML = ''; vids = [];
       methods.forEach(m => {
         const cell = document.createElement('div'); cell.className = 'cell';
+        const poster = m.src.replace(/\.mp4$/, '.jpg');
         cell.innerHTML =
-          '<div class="media portrait"><video muted loop playsinline preload="metadata">' +
+          '<div class="media portrait"><video muted loop playsinline preload="metadata" poster="' + poster + '">' +
           '<source src="' + m.src + '" type="video/mp4"></video>' +
           '<div class="media-ph"><i class="fas fa-play"></i><code>' + m.src.split('/').pop() + '</code></div></div>' +
           '<div class="clabel' + (m.ours ? ' ours' : '') + '">' + m.label + '</div>';
@@ -1698,6 +1753,7 @@
       });
       wireMedia(gridEl);
       master = vids[0] || null;
+      if (master) master.muted = !cmpUnmuted;
       vids.forEach(v => { v.play().catch(() => { }); });
       if (master) {
         master.addEventListener('timeupdate', syncTick);
@@ -1718,6 +1774,11 @@
       setPlayIcon(paused);
     };
     seek.oninput = () => { vids.forEach(v => { if (isFinite(v.duration)) v.currentTime = +seek.value; }); };
+    muteBtn.onclick = () => {
+      cmpUnmuted = !cmpUnmuted;
+      if (master) master.muted = !cmpUnmuted;
+      muteBtn.innerHTML = '<i class="fas fa-volume-' + (cmpUnmuted ? 'up' : 'mute') + '"></i>';
+    };
     render();
   </script>
 </body>
