@@ -75,6 +75,10 @@
       margin-right: auto;
     }
 
+    .wrap.wide {
+      max-width: 1300px;
+    }
+
     section {
       padding: 4rem 0;
     }
@@ -342,9 +346,44 @@
       aspect-ratio: 3/4;
     }
 
+    /* Matches the native aspect ratio of most AURA output clips (1216x768).
+       Used where a uniform grid must be kept across mixed-ratio clips: the
+       majority (landscape) fill edge-to-edge, minority (square) clips get
+       pillarboxed rather than the whole grid being letterboxed. */
+    .media.wide {
+      aspect-ratio: 1216/768;
+    }
+
     .media.figure {
       background: #fff;
       aspect-ratio: auto;
+    }
+
+    /* No forced aspect ratio: the box hugs the actual video/image dimensions,
+       so there's no letterboxing/pillarboxing when content doesn't match 16:9. */
+    .media.auto {
+      aspect-ratio: auto;
+    }
+
+    .media.auto video,
+    .media.auto img {
+      height: auto;
+    }
+
+    /* Teaser: mixed aspect ratios across the 3 clips. Classic "justified row"
+       trick: each item's flex-grow equals its own aspect ratio, so the row
+       always fills the container width at one shared height, with no gaps
+       and no wrapping — the wider clip is simply wider, not taller/shorter. */
+    #teaser-grid {
+      display: flex;
+      gap: 1.1rem;
+    }
+
+    #teaser-grid .media {
+      flex-basis: 0;
+      flex-shrink: 1;
+      min-width: 0;
+      max-height: 420px;
     }
 
     .media.figure img {
@@ -768,19 +807,22 @@
 
   <!-- ================= TEASER ================= -->
   <section style="padding-top:1.5rem;">
-    <div class="wrap">
-      <div class="grid g3" id="teaser-grid">
-        <div class="media"><video muted loop playsinline preload="metadata" poster="static/videos/teaser/1.jpg">
+    <div class="wrap wide">
+      <div id="teaser-grid">
+        <div class="media" style="aspect-ratio:1/1;flex-grow:1;"><video muted loop playsinline preload="metadata"
+            poster="static/videos/teaser/1.jpg">
             <source src="static/videos/teaser/1.mp4" type="video/mp4">
           </video>
           <div class="media-ph"><i class="fas fa-film"></i><code>teaser/1.mp4</code></div>
         </div>
-        <div class="media"><video muted loop playsinline preload="metadata" poster="static/videos/teaser/2.jpg">
+        <div class="media" style="aspect-ratio:1216/768;flex-grow:1.583;"><video muted loop playsinline
+            preload="metadata" poster="static/videos/teaser/2.jpg">
             <source src="static/videos/teaser/2.mp4" type="video/mp4">
           </video>
           <div class="media-ph"><i class="fas fa-film"></i><code>teaser/2.mp4</code></div>
         </div>
-        <div class="media"><video muted loop playsinline preload="metadata" poster="static/videos/teaser/3.jpg">
+        <div class="media" style="aspect-ratio:1/1;flex-grow:1;"><video muted loop playsinline preload="metadata"
+            poster="static/videos/teaser/3.jpg">
             <source src="static/videos/teaser/3.mp4" type="video/mp4">
           </video>
           <div class="media-ph"><i class="fas fa-film"></i><code>teaser/3.mp4</code></div>
@@ -885,14 +927,14 @@
 
   <!-- ================= QUALITATIVE RESULTS ================= -->
   <section id="results" class="alt">
-    <div class="wrap">
+    <div class="wrap wide">
       <p class="eyebrow" style="text-align:center;">Results</p>
       <h2 class="title" style="text-align:center;">AURA in action</h2>
       <p class="caption" style="margin-bottom:1.6rem;">Samples from the HALLO3 Test and CelebV-HQ Test benchmarks.
-        Unmute any clip to play with audio.</p>
+        Press play on any clip to watch it with audio.</p>
       <div class="grid g3">
         <div>
-          <div class="media portrait"><video muted loop playsinline controls preload="metadata"
+          <div class="media wide"><video loop playsinline controls preload="metadata"
               poster="static/videos/results/01.jpg">
               <source src="static/videos/results/01.mp4" type="video/mp4">
             </video>
@@ -900,7 +942,7 @@
           </div>
         </div>
         <div>
-          <div class="media portrait"><video muted loop playsinline controls preload="metadata"
+          <div class="media wide"><video loop playsinline controls preload="metadata"
               poster="static/videos/results/02.jpg">
               <source src="static/videos/results/02.mp4" type="video/mp4">
             </video>
@@ -908,7 +950,7 @@
           </div>
         </div>
         <div>
-          <div class="media portrait"><video muted loop playsinline controls preload="metadata"
+          <div class="media wide"><video loop playsinline controls preload="metadata"
               poster="static/videos/results/03.jpg">
               <source src="static/videos/results/03.mp4" type="video/mp4">
             </video>
@@ -916,7 +958,7 @@
           </div>
         </div>
         <div>
-          <div class="media portrait"><video muted loop playsinline controls preload="metadata"
+          <div class="media wide"><video loop playsinline controls preload="metadata"
               poster="static/videos/results/04.jpg">
               <source src="static/videos/results/04.mp4" type="video/mp4">
             </video>
@@ -924,7 +966,7 @@
           </div>
         </div>
         <div>
-          <div class="media portrait"><video muted loop playsinline controls preload="metadata"
+          <div class="media wide"><video loop playsinline controls preload="metadata"
               poster="static/videos/results/05.jpg">
               <source src="static/videos/results/05.mp4" type="video/mp4">
             </video>
@@ -932,7 +974,7 @@
           </div>
         </div>
         <div>
-          <div class="media portrait"><video muted loop playsinline controls preload="metadata"
+          <div class="media wide"><video loop playsinline controls preload="metadata"
               poster="static/videos/results/06.jpg">
               <source src="static/videos/results/06.mp4" type="video/mp4">
             </video>
