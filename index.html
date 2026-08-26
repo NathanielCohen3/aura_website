@@ -354,6 +354,10 @@
       aspect-ratio: 1216/768;
     }
 
+    .media.square {
+      aspect-ratio: 1/1;
+    }
+
     .media.figure {
       background: #fff;
       aspect-ratio: auto;
@@ -1151,13 +1155,13 @@
         <p class="caption" style="text-align:left;">AURA (3 steps) samples &mdash; the faster variant from the table
           above (11.2 fps end-to-end, vs. 9.7 fps for the 4-step default), at a small quality cost.</p>
         <div class="grid g2">
-          <div class="media portrait"><video muted loop playsinline controls preload="metadata"
+          <div class="media square"><video loop playsinline controls preload="metadata"
               poster="static/videos/three_step/1.jpg">
               <source src="static/videos/three_step/1.mp4" type="video/mp4">
             </video>
             <div class="media-ph"><i class="fas fa-play"></i><code>three_step/1.mp4</code></div>
           </div>
-          <div class="media portrait"><video muted loop playsinline controls preload="metadata"
+          <div class="media square"><video loop playsinline controls preload="metadata"
               poster="static/videos/three_step/2.jpg">
               <source src="static/videos/three_step/2.mp4" type="video/mp4">
             </video>
@@ -1307,6 +1311,83 @@
         <p class="caption">Figure 5. Human preference study: per-axis Bayesian Elo (&uarr;) from 300 pairwise
           comparisons by 30 raters on the HALLO3 Test clips; error bars are 95% CIs.</p>
       </div>
+
+      <div style="margin-top:2.4rem;">
+        <p class="caption" style="text-align:left;font-weight:600;color:var(--ink);margin-bottom:.4rem;">Table 8
+          &mdash; Long-form streaming stability</p>
+        <div class="tablewrap" style="margin-bottom:1rem;">
+          <table>
+            <thead>
+              <tr>
+                <th>Metric</th>
+                <th>0&ndash;10s</th>
+                <th>10&ndash;20s</th>
+                <th>20&ndash;30s</th>
+                <th>30&ndash;40s</th>
+                <th>40&ndash;50s</th>
+                <th>50&ndash;60s</th>
+                <th>Mean</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>FVD &darr;</td>
+                <td>186.7</td>
+                <td>189.6</td>
+                <td>181.2</td>
+                <td>189.7</td>
+                <td>189.3</td>
+                <td>187.7</td>
+                <td><b>187.4</b></td>
+              </tr>
+              <tr>
+                <td>CSIM &uarr;</td>
+                <td>0.784</td>
+                <td>0.779</td>
+                <td>0.767</td>
+                <td>0.758</td>
+                <td>0.713</td>
+                <td>0.754</td>
+                <td><b>0.759</b></td>
+              </tr>
+              <tr>
+                <td>Sync-C &uarr;</td>
+                <td>4.81</td>
+                <td>4.99</td>
+                <td>4.85</td>
+                <td>4.67</td>
+                <td>4.46</td>
+                <td>4.65</td>
+                <td><b>4.74</b></td>
+              </tr>
+              <tr>
+                <td>Warp &darr; (&times;10<sup>-3</sup>)</td>
+                <td>3.82</td>
+                <td>3.80</td>
+                <td>3.78</td>
+                <td>3.67</td>
+                <td>4.30</td>
+                <td>3.78</td>
+                <td><b>3.86</b></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="caption" style="margin-bottom:1rem;">AURA (4 steps) generates 60s of video per HALLO3 Test reference
+          (100 clips), with metrics computed per consecutive 10s segment. All metrics fluctuate only marginally with no
+          monotonic trend across the six segments &mdash; no systematic identity drift or accumulating chunk-boundary
+          artifacts at the minute scale, confirming the rolling KV cache sustains quality over an unbounded stream at
+          constant memory.</p>
+        <div class="narrow" style="max-width:280px;margin:0 auto;">
+          <div class="media square">
+            <video loop playsinline controls preload="metadata" poster="static/videos/ablations/long_form.jpg">
+              <source src="static/videos/ablations/long_form.mp4" type="video/mp4">
+            </video>
+            <div class="media-ph"><i class="fas fa-flask"></i><code>ablations/long_form.mp4</code></div>
+          </div>
+          <p class="caption">Full 60s continuous streaming generation from a single HALLO3 Test reference.</p>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -1319,335 +1400,278 @@
         evaluated on the HALLO3 Test set with shorter 6.3s clips to reduce compute (vs. the 10s clips used in the main
         results above). Best value per column in <b>bold</b>.</p>
 
-      <p class="caption" style="text-align:left;font-weight:600;color:var(--ink);margin-bottom:.4rem;">Table 3 &mdash;
-        Number of diffusion steps per chunk</p>
-      <div class="tablewrap" style="margin-bottom:1rem;">
-        <table>
-          <thead>
-            <tr>
-              <th>#Steps</th>
-              <th>FID &darr;</th>
-              <th>FVD &darr;</th>
-              <th>JEDi &darr;</th>
-              <th>CSIM &uarr;</th>
-              <th>Sync-C &uarr;</th>
-              <th>Sync-D &darr;</th>
-              <th>WE &darr;</th>
-              <th>DiT fps &uarr;</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="ours">
-              <td>4 (default)</td>
-              <td>57.2</td>
-              <td>191.0</td>
-              <td><b>0.37</b></td>
-              <td><b>0.80</b></td>
-              <td>4.09</td>
-              <td>10.02</td>
-              <td>0.0034</td>
-              <td>19.7</td>
-            </tr>
-            <tr>
-              <td>3</td>
-              <td>57.4</td>
-              <td>199.7</td>
-              <td><b>0.37</b></td>
-              <td>0.77</td>
-              <td>4.18</td>
-              <td><b>9.91</b></td>
-              <td><b>0.0033</b></td>
-              <td>26.0</td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>57.7</td>
-              <td>200.1</td>
-              <td>0.42</td>
-              <td><b>0.80</b></td>
-              <td>4.18</td>
-              <td>9.93</td>
-              <td>0.0032</td>
-              <td>38.5</td>
-            </tr>
-            <tr>
-              <td>1</td>
-              <td><b>60.2</b></td>
-              <td><b>231.7</b></td>
-              <td>0.65</td>
-              <td>0.65</td>
-              <td><b>4.09</b></td>
-              <td>9.77</td>
-              <td>0.0031</td>
-              <td><b>75.8</b></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="caption" style="margin-bottom:1rem;">Quality degrades gradually from 4 to 2 steps and drops sharply at 1
-        step; lip-sync stays roughly constant. Warp error looks better with fewer steps, but this reflects blurrier,
-        lower-detail outputs rather than a real gain &mdash; not a genuine improvement in temporal consistency.</p>
-      <div class="narrow" style="max-width:280px;margin:0 auto 2.2rem;">
-        <div class="media portrait">
-          <video muted loop playsinline controls preload="metadata" poster="static/videos/ablations/steps.jpg">
-            <source src="static/videos/ablations/steps.mp4" type="video/mp4">
-          </video>
-          <div class="media-ph"><i class="fas fa-flask"></i><code>ablations/steps.mp4</code></div>
-        </div>
-        <p class="caption">Same clip generated with 1, 2, 3 and 4 denoising steps.</p>
+      <div class="tabs" id="abl-tabs" style="justify-content:center;margin-bottom:1.8rem;">
+        <button class="tab active" data-target="abl-steps">Diffusion steps</button>
+        <button class="tab" data-target="abl-stage">Stage 1 vs 2</button>
+        <button class="tab" data-target="abl-kv">KV cache refresh</button>
+        <button class="tab" data-target="abl-window">Cache window size</button>
       </div>
 
-      <p class="caption" style="text-align:left;font-weight:600;color:var(--ink);margin-bottom:.4rem;">Table 4 &mdash;
-        Stage 1 only vs. Stage 1 + Stage 2 (DMD)</p>
-      <div class="tablewrap" style="margin-bottom:1rem;">
-        <table>
-          <thead>
-            <tr>
-              <th>Variant</th>
-              <th>FID &darr;</th>
-              <th>FVD &darr;</th>
-              <th>JEDi &darr;</th>
-              <th>CSIM &uarr;</th>
-              <th>Sync-C &uarr;</th>
-              <th>Sync-D &darr;</th>
-              <th>WE &darr;</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Stage 1 only</td>
-              <td><b>73.0</b></td>
-              <td><b>267.0</b></td>
-              <td><b>0.75</b></td>
-              <td>0.55</td>
-              <td>3.36</td>
-              <td><b>10.17</b></td>
-              <td><b>0.0026</b></td>
-            </tr>
-            <tr class="ours">
-              <td>Stage 1 + Stage 2</td>
-              <td>57.2</td>
-              <td>191.0</td>
-              <td>0.37</td>
-              <td><b>0.80</b></td>
-              <td><b>4.09</b></td>
-              <td>10.02</td>
-              <td>0.0034</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="caption" style="margin-bottom:1rem;">Adding the DMD stage substantially improves perceptual quality
-        (FID, FVD, JEDi), identity preservation (CSIM), and lip-sync &mdash; Stage 1 alone cannot close the few-step gap
-        to the teacher.</p>
-      <div class="narrow" style="max-width:280px;margin:0 auto 2.2rem;">
-        <div class="media portrait">
-          <video muted loop playsinline controls preload="metadata" poster="static/videos/ablations/stage.jpg">
-            <source src="static/videos/ablations/stage.mp4" type="video/mp4">
-          </video>
-          <div class="media-ph"><i class="fas fa-flask"></i><code>ablations/stage.mp4</code></div>
+      <div id="abl-steps" class="abl-panel">
+        <p class="caption" style="text-align:left;font-weight:600;color:var(--ink);margin-bottom:.4rem;">Table 3
+          &mdash; Number of diffusion steps per chunk</p>
+        <div class="tablewrap" style="margin-bottom:1rem;">
+          <table>
+            <thead>
+              <tr>
+                <th>#Steps</th>
+                <th>FID &darr;</th>
+                <th>FVD &darr;</th>
+                <th>JEDi &darr;</th>
+                <th>CSIM &uarr;</th>
+                <th>Sync-C &uarr;</th>
+                <th>Sync-D &darr;</th>
+                <th>WE &darr;</th>
+                <th>DiT fps &uarr;</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="ours">
+                <td>4 (default)</td>
+                <td>57.2</td>
+                <td>191.0</td>
+                <td><b>0.37</b></td>
+                <td><b>0.80</b></td>
+                <td>4.09</td>
+                <td>10.02</td>
+                <td>0.0034</td>
+                <td>19.7</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>57.4</td>
+                <td>199.7</td>
+                <td><b>0.37</b></td>
+                <td>0.77</td>
+                <td>4.18</td>
+                <td><b>9.91</b></td>
+                <td><b>0.0033</b></td>
+                <td>26.0</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>57.7</td>
+                <td>200.1</td>
+                <td>0.42</td>
+                <td><b>0.80</b></td>
+                <td>4.18</td>
+                <td>9.93</td>
+                <td>0.0032</td>
+                <td>38.5</td>
+              </tr>
+              <tr>
+                <td>1</td>
+                <td><b>60.2</b></td>
+                <td><b>231.7</b></td>
+                <td>0.65</td>
+                <td>0.65</td>
+                <td><b>4.09</b></td>
+                <td>9.77</td>
+                <td>0.0031</td>
+                <td><b>75.8</b></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <p class="caption">Same clip with Stage 1 only vs. the full Stage 1 + Stage 2 pipeline.</p>
+        <p class="caption" style="margin-bottom:1rem;">Quality degrades gradually from 4 to 2 steps and drops sharply
+          at 1 step; lip-sync stays roughly constant. Warp error looks better with fewer steps, but this reflects
+          blurrier, lower-detail outputs rather than a real gain &mdash; not a genuine improvement in temporal
+          consistency.</p>
+        <div class="narrow" style="max-width:280px;margin:0 auto;">
+          <div class="media portrait">
+            <video muted loop playsinline controls preload="metadata" poster="static/videos/ablations/steps.jpg">
+              <source src="static/videos/ablations/steps.mp4" type="video/mp4">
+            </video>
+            <div class="media-ph"><i class="fas fa-flask"></i><code>ablations/steps.mp4</code></div>
+          </div>
+          <p class="caption">Same clip generated with 1, 2, 3 and 4 denoising steps.</p>
+        </div>
       </div>
 
-      <p class="caption" style="text-align:left;font-weight:600;color:var(--ink);margin-bottom:.4rem;">Table 5 &mdash;
-        KV cache refresh with an additional inference step</p>
-      <div class="tablewrap" style="margin-bottom:1rem;">
-        <table>
-          <thead>
-            <tr>
-              <th>Variant</th>
-              <th>FID &darr;</th>
-              <th>FVD &darr;</th>
-              <th>JEDi &darr;</th>
-              <th>CSIM &uarr;</th>
-              <th>Sync-C &uarr;</th>
-              <th>Warp &darr;</th>
-              <th>DiT fps &uarr;</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="ours">
-              <td>4 steps (default)</td>
-              <td>57.2</td>
-              <td><b>191.0</b></td>
-              <td><b>0.37</b></td>
-              <td><b>0.80</b></td>
-              <td>4.09</td>
-              <td>0.0034</td>
-              <td><b>19.7</b></td>
-            </tr>
-            <tr>
-              <td>5-step (t=0 refresh)</td>
-              <td>56.6</td>
-              <td>197.7</td>
-              <td><b>0.37</b></td>
-              <td>0.79</td>
-              <td>4.03</td>
-              <td>0.0035</td>
-              <td>15.6</td>
-            </tr>
-            <tr>
-              <td>5-step (t=50 refresh)</td>
-              <td>54.9</td>
-              <td>196.1</td>
-              <td>0.40</td>
-              <td>0.78</td>
-              <td>4.08</td>
-              <td>0.0036</td>
-              <td>15.6</td>
-            </tr>
-            <tr>
-              <td>5-step (t=50, used)</td>
-              <td><b>53.6</b></td>
-              <td>198.3</td>
-              <td>0.40</td>
-              <td>0.77</td>
-              <td><b>4.11</b></td>
-              <td>0.0037</td>
-              <td>15.6</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="caption" style="margin-bottom:1rem;">None of the refresh variants consistently beats the simpler 4-step
-        default once the added inference cost is accounted for, so AURA keeps the 4-step design.</p>
-      <div class="narrow" style="max-width:280px;margin:0 auto 2.2rem;">
-        <div class="media portrait">
-          <video muted loop playsinline controls preload="metadata" poster="static/videos/ablations/kv_refresh.jpg">
-            <source src="static/videos/ablations/kv_refresh.mp4" type="video/mp4">
-          </video>
-          <div class="media-ph"><i class="fas fa-flask"></i><code>ablations/kv_refresh.mp4</code></div>
+      <div id="abl-stage" class="abl-panel" hidden>
+        <p class="caption" style="text-align:left;font-weight:600;color:var(--ink);margin-bottom:.4rem;">Table 4
+          &mdash; Stage 1 only vs. Stage 1 + Stage 2 (DMD)</p>
+        <div class="tablewrap" style="margin-bottom:1rem;">
+          <table>
+            <thead>
+              <tr>
+                <th>Variant</th>
+                <th>FID &darr;</th>
+                <th>FVD &darr;</th>
+                <th>JEDi &darr;</th>
+                <th>CSIM &uarr;</th>
+                <th>Sync-C &uarr;</th>
+                <th>Sync-D &darr;</th>
+                <th>WE &darr;</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Stage 1 only</td>
+                <td><b>73.0</b></td>
+                <td><b>267.0</b></td>
+                <td><b>0.75</b></td>
+                <td>0.55</td>
+                <td>3.36</td>
+                <td><b>10.17</b></td>
+                <td><b>0.0026</b></td>
+              </tr>
+              <tr class="ours">
+                <td>Stage 1 + Stage 2</td>
+                <td>57.2</td>
+                <td>191.0</td>
+                <td>0.37</td>
+                <td><b>0.80</b></td>
+                <td><b>4.09</b></td>
+                <td>10.02</td>
+                <td>0.0034</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <p class="caption">Same clip across the 4-step default and the 5-step KV cache refresh variants.</p>
+        <p class="caption" style="margin-bottom:1rem;">Adding the DMD stage substantially improves perceptual quality
+          (FID, FVD, JEDi), identity preservation (CSIM), and lip-sync &mdash; Stage 1 alone cannot close the few-step
+          gap to the teacher.</p>
+        <div class="narrow" style="max-width:280px;margin:0 auto;">
+          <div class="media portrait">
+            <video muted loop playsinline controls preload="metadata" poster="static/videos/ablations/stage.jpg">
+              <source src="static/videos/ablations/stage.mp4" type="video/mp4">
+            </video>
+            <div class="media-ph"><i class="fas fa-flask"></i><code>ablations/stage.mp4</code></div>
+          </div>
+          <p class="caption">Same clip with Stage 1 only vs. the full Stage 1 + Stage 2 pipeline.</p>
+        </div>
       </div>
 
-      <p class="caption" style="text-align:left;font-weight:600;color:var(--ink);margin-bottom:.4rem;">Table 9 &mdash;
-        Rolling cache window size</p>
-      <div class="tablewrap" style="margin-bottom:1rem;">
-        <table>
-          <thead>
-            <tr>
-              <th>Variant</th>
-              <th>FID &darr;</th>
-              <th>FVD &darr;</th>
-              <th>JEDi &darr;</th>
-              <th>CSIM &uarr;</th>
-              <th>Sync-C &uarr;</th>
-              <th>WE &darr;</th>
-              <th>DiT fps &uarr;</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="ours">
-              <td>n=1 (default)</td>
-              <td><b>57.2</b></td>
-              <td><b>191.0</b></td>
-              <td><b>0.37</b></td>
-              <td><b>0.80</b></td>
-              <td><b>4.09</b></td>
-              <td>0.0034</td>
-              <td><b>20</b></td>
-            </tr>
-            <tr>
-              <td>n=2</td>
-              <td>57.8</td>
-              <td>200.8</td>
-              <td>0.44</td>
-              <td>0.79</td>
-              <td>4.00</td>
-              <td><b>0.0037</b></td>
-              <td>18</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="caption" style="margin-bottom:1rem;">Retaining a second past chunk (n=2) in the rolling cache, on top of
-        the first-chunk identity anchor, improves no metric while increasing cache size and lowering throughput &mdash;
-        AURA keeps a single-chunk window.</p>
-      <div class="narrow" style="max-width:280px;margin:0 auto 2.2rem;">
-        <div class="media portrait">
-          <video muted loop playsinline controls preload="metadata" poster="static/videos/ablations/window_size.jpg">
-            <source src="static/videos/ablations/window_size.mp4" type="video/mp4">
-          </video>
-          <div class="media-ph"><i class="fas fa-flask"></i><code>ablations/window_size.mp4</code></div>
+      <div id="abl-kv" class="abl-panel" hidden>
+        <p class="caption" style="text-align:left;font-weight:600;color:var(--ink);margin-bottom:.4rem;">Table 5
+          &mdash; KV cache refresh with an additional inference step</p>
+        <div class="tablewrap" style="margin-bottom:1rem;">
+          <table>
+            <thead>
+              <tr>
+                <th>Variant</th>
+                <th>FID &darr;</th>
+                <th>FVD &darr;</th>
+                <th>JEDi &darr;</th>
+                <th>CSIM &uarr;</th>
+                <th>Sync-C &uarr;</th>
+                <th>Warp &darr;</th>
+                <th>DiT fps &uarr;</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="ours">
+                <td>4 steps (default)</td>
+                <td>57.2</td>
+                <td><b>191.0</b></td>
+                <td><b>0.37</b></td>
+                <td><b>0.80</b></td>
+                <td>4.09</td>
+                <td>0.0034</td>
+                <td><b>19.7</b></td>
+              </tr>
+              <tr>
+                <td>5-step (t=0 refresh)</td>
+                <td>56.6</td>
+                <td>197.7</td>
+                <td><b>0.37</b></td>
+                <td>0.79</td>
+                <td>4.03</td>
+                <td>0.0035</td>
+                <td>15.6</td>
+              </tr>
+              <tr>
+                <td>5-step (t=50 refresh)</td>
+                <td>54.9</td>
+                <td>196.1</td>
+                <td>0.40</td>
+                <td>0.78</td>
+                <td>4.08</td>
+                <td>0.0036</td>
+                <td>15.6</td>
+              </tr>
+              <tr>
+                <td>5-step (t=50, used)</td>
+                <td><b>53.6</b></td>
+                <td>198.3</td>
+                <td>0.40</td>
+                <td>0.77</td>
+                <td><b>4.11</b></td>
+                <td>0.0037</td>
+                <td>15.6</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <p class="caption">Same clip with a single-chunk (n=1) vs. two-chunk (n=2) rolling cache window.</p>
+        <p class="caption" style="margin-bottom:1rem;">None of the refresh variants consistently beats the simpler
+          4-step default once the added inference cost is accounted for, so AURA keeps the 4-step design.</p>
+        <div class="narrow" style="max-width:280px;margin:0 auto;">
+          <div class="media portrait">
+            <video muted loop playsinline controls preload="metadata"
+              poster="static/videos/ablations/kv_refresh.jpg">
+              <source src="static/videos/ablations/kv_refresh.mp4" type="video/mp4">
+            </video>
+            <div class="media-ph"><i class="fas fa-flask"></i><code>ablations/kv_refresh.mp4</code></div>
+          </div>
+          <p class="caption">Same clip across the 4-step default and the 5-step KV cache refresh variants.</p>
+        </div>
       </div>
 
-      <p class="caption" style="text-align:left;font-weight:600;color:var(--ink);margin-bottom:.4rem;">Table 8 &mdash;
-        Long-form streaming stability</p>
-      <div class="tablewrap" style="margin-bottom:1rem;">
-        <table>
-          <thead>
-            <tr>
-              <th>Metric</th>
-              <th>0&ndash;10s</th>
-              <th>10&ndash;20s</th>
-              <th>20&ndash;30s</th>
-              <th>30&ndash;40s</th>
-              <th>40&ndash;50s</th>
-              <th>50&ndash;60s</th>
-              <th>Mean</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>FVD &darr;</td>
-              <td>186.7</td>
-              <td>189.6</td>
-              <td>181.2</td>
-              <td>189.7</td>
-              <td>189.3</td>
-              <td>187.7</td>
-              <td><b>187.4</b></td>
-            </tr>
-            <tr>
-              <td>CSIM &uarr;</td>
-              <td>0.784</td>
-              <td>0.779</td>
-              <td>0.767</td>
-              <td>0.758</td>
-              <td>0.713</td>
-              <td>0.754</td>
-              <td><b>0.759</b></td>
-            </tr>
-            <tr>
-              <td>Sync-C &uarr;</td>
-              <td>4.81</td>
-              <td>4.99</td>
-              <td>4.85</td>
-              <td>4.67</td>
-              <td>4.46</td>
-              <td>4.65</td>
-              <td><b>4.74</b></td>
-            </tr>
-            <tr>
-              <td>Warp &darr; (&times;10<sup>-3</sup>)</td>
-              <td>3.82</td>
-              <td>3.80</td>
-              <td>3.78</td>
-              <td>3.67</td>
-              <td>4.30</td>
-              <td>3.78</td>
-              <td><b>3.86</b></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="caption" style="margin-bottom:1rem;">AURA (4 steps) generates 60s of video per HALLO3 Test reference
-        (100 clips), with metrics computed per consecutive 10s segment. All metrics fluctuate only marginally with no
-        monotonic trend across the six segments &mdash; no systematic identity drift or accumulating chunk-boundary
-        artifacts at the minute scale, confirming the rolling KV cache sustains quality over an unbounded stream at
-        constant memory.</p>
-      <div class="narrow" style="max-width:280px;margin:0 auto;">
-        <div class="media portrait">
-          <video muted loop playsinline controls preload="metadata" poster="static/videos/ablations/long_form.jpg">
-            <source src="static/videos/ablations/long_form.mp4" type="video/mp4">
-          </video>
-          <div class="media-ph"><i class="fas fa-flask"></i><code>ablations/long_form.mp4</code></div>
+      <div id="abl-window" class="abl-panel" hidden>
+        <p class="caption" style="text-align:left;font-weight:600;color:var(--ink);margin-bottom:.4rem;">Table 9
+          &mdash; Rolling cache window size</p>
+        <div class="tablewrap" style="margin-bottom:1rem;">
+          <table>
+            <thead>
+              <tr>
+                <th>Variant</th>
+                <th>FID &darr;</th>
+                <th>FVD &darr;</th>
+                <th>JEDi &darr;</th>
+                <th>CSIM &uarr;</th>
+                <th>Sync-C &uarr;</th>
+                <th>WE &darr;</th>
+                <th>DiT fps &uarr;</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="ours">
+                <td>n=1 (default)</td>
+                <td><b>57.2</b></td>
+                <td><b>191.0</b></td>
+                <td><b>0.37</b></td>
+                <td><b>0.80</b></td>
+                <td><b>4.09</b></td>
+                <td>0.0034</td>
+                <td><b>20</b></td>
+              </tr>
+              <tr>
+                <td>n=2</td>
+                <td>57.8</td>
+                <td>200.8</td>
+                <td>0.44</td>
+                <td>0.79</td>
+                <td>4.00</td>
+                <td><b>0.0037</b></td>
+                <td>18</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <p class="caption">Full 60s continuous streaming generation from a single HALLO3 Test reference.</p>
+        <p class="caption" style="margin-bottom:1rem;">Retaining a second past chunk (n=2) in the rolling cache, on
+          top of the first-chunk identity anchor, improves no metric while increasing cache size and lowering
+          throughput &mdash; AURA keeps a single-chunk window.</p>
+        <div class="narrow" style="max-width:280px;margin:0 auto;">
+          <div class="media portrait">
+            <video muted loop playsinline controls preload="metadata"
+              poster="static/videos/ablations/window_size.jpg">
+              <source src="static/videos/ablations/window_size.mp4" type="video/mp4">
+            </video>
+            <div class="media-ph"><i class="fas fa-flask"></i><code>ablations/window_size.mp4</code></div>
+          </div>
+          <p class="caption">Same clip with a single-chunk (n=1) vs. two-chunk (n=2) rolling cache window.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -1705,6 +1729,17 @@
       });
     }
     wireMedia(document);
+
+    /* ---------- ablation tabs ---------- */
+    (function () {
+      const tabs = [...document.querySelectorAll('#abl-tabs .tab')];
+      tabs.forEach(t => t.addEventListener('click', () => {
+        tabs.forEach(x => x.classList.remove('active'));
+        t.classList.add('active');
+        document.querySelectorAll('.abl-panel').forEach(p => p.hidden = true);
+        document.getElementById(t.dataset.target).hidden = false;
+      }));
+    })();
 
     /* ---------- teaser grid: synchronized playback (same audio, 3 identities) ---------- */
     (function () {
