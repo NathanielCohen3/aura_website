@@ -757,7 +757,7 @@
   <!-- ================= HERO ================= -->
   <header class="hero" id="top">
     <div class="wrap">
-      <span class="venue">BMVC 2026</span>
+      <span class="venue">BMVC 2026</span><span class="venue" style="margin-left:.5rem;">ECCV 2026 Workshop</span>
       <h1 class="h1">AURA<span class="accent">:</span><br><span style="font-size:.5em;font-weight:700;">AUdio-dRiven
           streaming Avatar</span></h1>
       <p class="tagline">Streaming, causal, few-step audio-driven talking-head video generation.</p>
@@ -1476,6 +1476,7 @@
           at 1 step; lip-sync stays roughly constant. Warp error looks better with fewer steps, but this reflects
           blurrier, lower-detail outputs rather than a real gain &mdash; not a genuine improvement in temporal
           consistency.</p>
+        <!-- Hidden for initial ship, no real footage yet; re-enable when available
         <div class="narrow" style="max-width:280px;margin:0 auto;">
           <div class="media portrait">
             <video muted loop playsinline controls preload="metadata" poster="static/videos/ablations/steps.jpg">
@@ -1485,6 +1486,7 @@
           </div>
           <p class="caption">Same clip generated with 1, 2, 3 and 4 denoising steps.</p>
         </div>
+        -->
       </div>
 
       <div id="abl-stage" class="abl-panel" hidden>
@@ -1531,6 +1533,7 @@
         <p class="caption" style="margin-bottom:1rem;">Adding the DMD stage substantially improves perceptual quality
           (FID, FVD, JEDi), identity preservation (CSIM), and lip-sync &mdash; Stage 1 alone cannot close the few-step
           gap to the teacher.</p>
+        <!-- Hidden for initial ship, no real footage yet; re-enable when available
         <div class="narrow" style="max-width:280px;margin:0 auto;">
           <div class="media portrait">
             <video muted loop playsinline controls preload="metadata" poster="static/videos/ablations/stage.jpg">
@@ -1540,6 +1543,7 @@
           </div>
           <p class="caption">Same clip with Stage 1 only vs. the full Stage 1 + Stage 2 pipeline.</p>
         </div>
+        -->
       </div>
 
       <div id="abl-kv" class="abl-panel" hidden>
@@ -1605,6 +1609,7 @@
         </div>
         <p class="caption" style="margin-bottom:1rem;">None of the refresh variants consistently beats the simpler
           4-step default once the added inference cost is accounted for, so AURA keeps the 4-step design.</p>
+        <!-- Hidden for initial ship, no real footage yet; re-enable when available
         <div class="narrow" style="max-width:280px;margin:0 auto;">
           <div class="media portrait">
             <video muted loop playsinline controls preload="metadata"
@@ -1615,6 +1620,7 @@
           </div>
           <p class="caption">Same clip across the 4-step default and the 5-step KV cache refresh variants.</p>
         </div>
+        -->
       </div>
 
       <div id="abl-window" class="abl-panel" hidden>
@@ -1661,6 +1667,7 @@
         <p class="caption" style="margin-bottom:1rem;">Retaining a second past chunk (n=2) in the rolling cache, on
           top of the first-chunk identity anchor, improves no metric while increasing cache size and lowering
           throughput &mdash; AURA keeps a single-chunk window.</p>
+        <!-- Hidden for initial ship, no real footage yet; re-enable when available
         <div class="narrow" style="max-width:280px;margin:0 auto;">
           <div class="media portrait">
             <video muted loop playsinline controls preload="metadata"
@@ -1671,6 +1678,7 @@
           </div>
           <p class="caption">Same clip with a single-chunk (n=1) vs. two-chunk (n=2) rolling cache window.</p>
         </div>
+        -->
       </div>
     </div>
   </section>
@@ -1789,8 +1797,9 @@
             { label: "Wan-S2V", src: "static/videos/vs/hallo3/s2/wan_s2v.mp4" }
           ]
         }
-      ],
-      "CelebV-HQ Test": [
+      ]
+      /* CelebV-HQ Test — hidden for initial ship, no real content yet; re-enable when samples land
+      ,"CelebV-HQ Test": [
         {
           name: "Sample 1", methods: [
             { label: "Input", src: "static/images/vs/celebvhq/s1/input.jpg", img: true },
@@ -1802,6 +1811,7 @@
           ]
         }
       ]
+      */
     };
 
     const setsEl = document.getElementById('cmp-sets'), sampEl = document.getElementById('cmp-samples'),
