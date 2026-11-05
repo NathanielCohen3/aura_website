@@ -1,13 +1,13 @@
 /* Crisp, responsive SVG charts for the AURA page (vanilla JS, no dependency).
    - Figure 4: quality vs. speed bubble chart (FVD / JEDi averaged over HALLO3 + CelebV-HQ test sets)
-   - Figure 5: user-study Bayesian Elo per axis with 95% CIs
+   - Figure 5: user-study Bayesian Elo per axis with 95% CIs (arXiv v2 study: AURA 5B, AURA 1.3B, TalkVerse, Hallo3)
    EDIT the data blocks below; everything else is layout. */
 (function () {
   const NS = 'http://www.w3.org/2000/svg';
   // Palette is read from the page's CSS custom properties (single source of truth: :root in index.html).
   const css = getComputedStyle(document.documentElement);
   const v = (name, fallback) => (css.getPropertyValue(name) || '').trim() || fallback;
-  const COLORS = { ours: v('--c-ours', '#39f2ae'), teacher: v('--c-teacher', '#f5ab4a'),
+  const COLORS = { ours: v('--c-ours', '#39f2ae'), ours13: v('--c-ours13', '#1c9e70'), teacher: v('--c-teacher', '#f5ab4a'),
     baseline: v('--c-baseline', '#7c7c7c'), hallo3: v('--c-hallo3', '#a57de8') };
   const INK = v('--ink', '#ffffff'), MUTED = v('--muted', '#9d9d9d'), GRID = v('--grid', '#232323'),
     SURFACE = v('--surface', '#191919'), AXIS = v('--axis', '#404040'), WHISKER = v('--text', '#b5bcc5');
@@ -21,13 +21,20 @@
     { name: 'TalkVerse (teacher)', role: 'teacher', params: 5, time: 429, H: { FVD: 210.8, JEDi: 0.398 }, C: { FVD: 255.9, JEDi: 0.582 } },
     { name: 'Live Avatar', role: 'baseline', params: 14, time: 84, H: { FVD: 181.1, JEDi: 0.442 }, C: { FVD: 267.5, JEDi: 1.010 } },
     { name: 'AURA 5B (ours)', role: 'ours', params: 5, time: 25.8, H: { FVD: 195.5, JEDi: 0.313 }, C: { FVD: 208.1, JEDi: 0.320 } },
+    // 1.3B: 10 s at 16 Hz = 160 frames / 20.7 fps end-to-end.
+    { name: 'AURA 1.3B (ours)', role: 'ours13', params: 1.3, time: +(160 / 20.7).toFixed(1), H: { FVD: 177.1, JEDi: 0.403 }, C: { FVD: 248.8, JEDi: 0.574 },
+      dy: { JEDi: 18 } },  // JEDi avg ~= TalkVerse's: push the label below the bubble
   ];
-  // Mabyduck bayesian_elo: [value, lower 95%, upper 95%].
+  const REALTIME_S = 10;  // generating 10 s of video in <= 10 s = real time
+  // Mabyduck bayesian_elo (study x1ikkvn, 400 comparisons, 27 raters): [value, lower 95%, upper 95%].
+  // Values = Mabyduck's own SVG exports (TalkVerse/evaluation/results (1-4).svg), as in the arXiv v2 figure;
+  // CI bounds recovered from the SVG error-bar geometry.
   const ELO_AXES = ['Quality', 'Naturalness', 'Lip sync', 'Ref. fidelity'];
   const ELO = [
-    { name: 'AURA (ours)', color: COLORS.ours, v: [[2022.0, 1988.8, 2052.3], [2044.0, 2011.8, 2073.5], [2022.1, 1987.7, 2053.4], [2054.4, 2022.0, 2084.1]] },
-    { name: 'TalkVerse (teacher)', color: COLORS.teacher, v: [[2066.9, 2037.4, 2094.0], [2039.9, 2009.2, 2068.0], [2030.3, 1998.2, 2059.7], [1955.2, 1917.7, 1989.0]] },
-    { name: 'Hallo3', color: COLORS.hallo3, v: [[1796.1, 1738.1, 1845.7], [1815.1, 1760.3, 1862.3], [1907.1, 1864.0, 1945.4], [1944.6, 1906.5, 1978.9]] },
+    { name: 'AURA 5B (ours)', color: COLORS.ours, v: [[2087.4, 2058.2, 2114.3], [2073.0, 2042.8, 2100.7], [2044.5, 2012.5, 2073.8], [2076.4, 2045.8, 2104.5]] },
+    { name: 'AURA 1.3B (ours)', color: COLORS.ours13, v: [[1906.1, 1865.6, 1942.2], [1941.0, 1902.5, 1975.7], [1971.5, 1934.3, 2005.1], [2031.8, 1998.9, 2061.9]] },
+    { name: 'TalkVerse (teacher)', color: COLORS.teacher, v: [[2073.6, 2043.9, 2100.8], [2052.3, 2021.4, 2080.7], [2048.7, 2016.9, 2077.8], [1950.2, 1912.2, 1984.4]] },
+    { name: 'Hallo3', color: COLORS.hallo3, v: [[1779.7, 1722.4, 1828.8], [1841.1, 1791.1, 1884.7], [1906.8, 1863.3, 1945.3], [1900.5, 1857.2, 1938.9]] },
   ];
 
   /* ---------------- helpers ---------------- */
@@ -76,11 +83,14 @@
     const vals = BUBBLES.map(avg);
     let lo = Math.min(...vals), hi = Math.max(...vals), pad = (hi - lo) * 0.16;
     lo -= pad; hi += pad;
-    const xLo = Math.log10(15), xHi = Math.log10(3600);
+    const xLo = Math.log10(5), xHi = Math.log10(3600);
     const X = t => x0 + m.l + (Math.log10(t) - xLo) / (xHi - xLo) * pw;
     const Y = v => y0 + m.t + (1 - (v - lo) / (hi - lo)) * ph;
     const g = el('g', {}, svg);
     el('text', { x: x0 + m.l, y: y0 + 14, 'font-size': 13, 'font-weight': 600, fill: INK }, g, title);
+    // real-time band: <= 10 s of compute per 10 s of video
+    el('rect', { x: x0 + m.l, y: y0 + m.t, width: X(REALTIME_S) - x0 - m.l, height: ph, fill: COLORS.ours, 'fill-opacity': 0.07 }, g);
+    el('text', { x: x0 + m.l + 4, y: y0 + m.t + 12, 'font-size': 10, fill: COLORS.ours, 'font-family': 'var(--mono)' }, g, 'real time');
     // grid + y ticks
     niceTicks(lo, hi, 5).forEach(v => {
       el('line', { x1: x0 + m.l, x2: x0 + m.l + pw, y1: Y(v), y2: Y(v), stroke: GRID, 'stroke-width': 1 }, g);
@@ -88,23 +98,24 @@
         style: 'font-variant-numeric:tabular-nums' }, g, metric === 'JEDi' ? v.toFixed(2) : v);
     });
     // x ticks (log)
-    [20, 50, 100, 200, 500, 1000, 2000].forEach(t => {
+    [5, 10, 20, 50, 100, 200, 500, 1000, 2000].forEach(t => {
       el('line', { x1: X(t), x2: X(t), y1: y0 + m.t, y2: y0 + m.t + ph, stroke: GRID, 'stroke-width': 1 }, g);
       el('text', { x: X(t), y: y0 + m.t + ph + 17, 'font-size': 11, fill: MUTED, 'text-anchor': 'middle' }, g,
         t >= 1000 ? (t / 1000) + 'k' : t);
     });
     el('line', { x1: x0 + m.l, x2: x0 + m.l + pw, y1: y0 + m.t + ph, y2: y0 + m.t + ph, stroke: AXIS, 'stroke-width': 1 }, g);
     el('text', { x: x0 + m.l + pw / 2, y: y0 + h - 8, 'font-size': 11.5, fill: MUTED, 'text-anchor': 'middle' }, g,
-      compact ? 'Seconds per 10 s of video (log)' : 'Seconds to generate 10 s of video (log scale) — lower is faster');
+      compact || w < 460 ? 'Seconds per 10 s of video (log)' : 'Seconds to generate 10 s of video (log scale) — lower is faster');
     // bubbles: largest first so small ones stay on top
     [...BUBBLES].sort((a, b) => b.params - a.params).forEach(d => {
       const cx = X(d.time), cy = Y(avg(d)), r = (compact ? 5.5 : 7) * Math.sqrt(d.params);
-      const c = el('circle', { cx, cy, r, fill: COLORS[d.role], 'fill-opacity': d.role === 'baseline' ? 0.8 : 0.95,
+      const c = el('circle', { cx, cy, r: Math.max(r, 6), fill: COLORS[d.role], 'fill-opacity': d.role === 'baseline' ? 0.8 : 0.95,
         stroke: SURFACE, 'stroke-width': 2, style: 'cursor:default' }, g);
       // label on the right unless it would overflow the panel (rough text-width estimate)
       const right = cx + r + 8 + d.name.length * 7 < x0 + w;
-      el('text', { x: right ? cx + r + 6 : cx - r - 6, y: cy + 4, 'font-size': 12, fill: INK,
-        'font-weight': d.role === 'ours' ? 700 : 400, 'text-anchor': right ? 'start' : 'end' }, g, d.name);
+      const dy = (d.dy && d.dy[metric]) || 0;
+      el('text', { x: right ? cx + r + 6 : cx - r - 6, y: cy + 4 + dy, 'font-size': 12, fill: INK,
+        'font-weight': d.role.startsWith('ours') ? 700 : 400, 'text-anchor': right ? 'start' : 'end' }, g, d.name);
       const f = metric === 'JEDi' ? (v => v.toFixed(3)) : (v => v.toFixed(1));
       bindTip(c, `<b>${d.name}</b><br>${d.params}B params · ${d.time} s per 10 s<br>` +
         `${metric} avg <b>${f(avg(d))}</b><br><span>HALLO3 ${f(d.H[metric])} · CelebV-HQ ${f(d.C[metric])}</span>`);
@@ -132,11 +143,11 @@
     if (!host) return;
     const W = Math.min(host.clientWidth || 520, 640), H = 320;
     const m = { l: 50, r: 10, t: 34, b: 34 }, pw = W - m.l - m.r, ph = H - m.t - m.b;
-    const lo = 1700, hi = 2125, y0 = m.t + ph;
+    const lo = 1700, hi = 2150, y0 = m.t + ph;
     const Y = v => m.t + (1 - (v - lo) / (hi - lo)) * ph;
     const band = pw / ELO_AXES.length, gap = 2;
     const bw = Math.min(24, (band * 0.72 - gap * (ELO.length - 1)) / ELO.length);
-    const svg = svgRoot(host, W, H, 'Bayesian Elo with 95% intervals for AURA, TalkVerse and Hallo3 on four axes.');
+    const svg = svgRoot(host, W, H, 'Bayesian Elo with 95% intervals for AURA 5B, AURA 1.3B, TalkVerse and Hallo3 on four axes.');
     for (let v = 1700; v <= 2100; v += 100) {
       el('line', { x1: m.l, x2: m.l + pw, y1: Y(v), y2: Y(v), stroke: GRID, 'stroke-width': 1 }, svg);
       el('text', { x: m.l - 8, y: Y(v) + 4, 'font-size': 11, fill: MUTED, 'text-anchor': 'end',
