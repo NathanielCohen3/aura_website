@@ -4,8 +4,13 @@
    EDIT the data blocks below; everything else is layout. */
 (function () {
   const NS = 'http://www.w3.org/2000/svg';
-  const COLORS = { ours: '#4f46e5', teacher: '#eb6834', baseline: '#9aa3ad', hallo3: '#1baf7a' };
-  const INK = '#14151a', MUTED = '#6b6f76', GRID = '#eceef1', SURFACE = '#ffffff';
+  // Palette is read from the page's CSS custom properties (single source of truth: :root in index.html).
+  const css = getComputedStyle(document.documentElement);
+  const v = (name, fallback) => (css.getPropertyValue(name) || '').trim() || fallback;
+  const COLORS = { ours: v('--c-ours', '#39f2ae'), teacher: v('--c-teacher', '#f5ab4a'),
+    baseline: v('--c-baseline', '#7c7c7c'), hallo3: v('--c-hallo3', '#a57de8') };
+  const INK = v('--ink', '#ffffff'), MUTED = v('--muted', '#9d9d9d'), GRID = v('--grid', '#232323'),
+    SURFACE = v('--surface', '#191919'), AXIS = v('--axis', '#404040'), WHISKER = v('--text', '#b5bcc5');
 
   /* ---------------- data ---------------- */
   // FVD / JEDi = mean of the @0/@101/@109 windows (v3 metrics); H = HALLO3 Test, C = CelebV-HQ Test.
@@ -88,7 +93,7 @@
       el('text', { x: X(t), y: y0 + m.t + ph + 17, 'font-size': 11, fill: MUTED, 'text-anchor': 'middle' }, g,
         t >= 1000 ? (t / 1000) + 'k' : t);
     });
-    el('line', { x1: x0 + m.l, x2: x0 + m.l + pw, y1: y0 + m.t + ph, y2: y0 + m.t + ph, stroke: '#c9cdd3', 'stroke-width': 1 }, g);
+    el('line', { x1: x0 + m.l, x2: x0 + m.l + pw, y1: y0 + m.t + ph, y2: y0 + m.t + ph, stroke: AXIS, 'stroke-width': 1 }, g);
     el('text', { x: x0 + m.l + pw / 2, y: y0 + h - 8, 'font-size': 11.5, fill: MUTED, 'text-anchor': 'middle' }, g,
       compact ? 'Seconds per 10 s of video (log)' : 'Seconds to generate 10 s of video (log scale) — lower is faster');
     // bubbles: largest first so small ones stay on top
@@ -147,13 +152,13 @@
         el('path', { d: barPath(x, bw, Y(v), y0, 4), fill: s.color }, g);
         // 95% CI whisker with short caps
         el('path', { d: `M${xc},${Y(a)}V${Y(b)}M${xc - 3},${Y(a)}H${xc + 3}M${xc - 3},${Y(b)}H${xc + 3}`,
-          stroke: '#3a3d45', 'stroke-width': 1.25, fill: 'none' }, g);
+          stroke: WHISKER, 'stroke-width': 1.25, fill: 'none' }, g);
         // invisible hit target covering the bar and its whisker
         const hit = el('rect', { x: x - gap / 2, y: Y(b) - 6, width: bw + gap, height: y0 - Y(b) + 6, fill: 'transparent' }, g);
         bindTip(hit, `<b>${s.name}</b> · ${ax}<br>Elo <b>${v.toFixed(0)}</b><br><span>95% CI [${a.toFixed(0)}, ${b.toFixed(0)}]</span>`);
       });
     });
-    el('line', { x1: m.l, x2: m.l + pw, y1: y0, y2: y0, stroke: '#c9cdd3', 'stroke-width': 1 }, svg);
+    el('line', { x1: m.l, x2: m.l + pw, y1: y0, y2: y0, stroke: AXIS, 'stroke-width': 1 }, svg);
   }
 
   function drawAll() { hideTip(); drawBubbles(); drawElo(); }
