@@ -924,6 +924,19 @@
       background: var(--surface);
     }
 
+    details.numbers {
+      margin: .4rem 0 1rem;
+    }
+
+    details.numbers summary {
+      cursor: pointer;
+      font-family: var(--mono);
+      font-size: .75rem;
+      letter-spacing: .06em;
+      color: var(--accent);
+      text-align: center;
+    }
+
     /* ---------- RESPONSIVE ---------- */
     @media(max-width:820px) {
       .nav-links {
@@ -1634,9 +1647,18 @@
       </div>
 
       <div style="margin-top:2.4rem;">
-        <p class="caption" style="text-align:left;font-weight:600;color:var(--ink);margin-bottom:.4rem;">Table 3
-          &mdash; Long-form streaming stability</p>
-        <div class="tablewrap" style="margin-bottom:1rem;">
+        <p class="caption" style="text-align:left;font-weight:600;color:var(--ink);margin-bottom:.4rem;">Long-form
+          streaming stability</p>
+        <div class="viz-legend">
+          <span><i class="c-ours"></i>AURA 5B (ours)</span>
+          <span><i class="c-ours13"></i>AURA 1.3B (ours)</span>
+        </div>
+        <div id="viz-long" class="viz"></div>
+        <p class="caption">Figure 6. FVD, CSIM and Sync-C per 10s segment over 60s of streaming, averaged over the 100
+          HALLO3 Test references.</p>
+        <details class="numbers">
+          <summary>Show the numbers (incl. warping error)</summary>
+          <div class="tablewrap" style="margin-top:.6rem;">
         <table>
           <thead>
             <tr>
@@ -1736,6 +1758,7 @@
           </tbody>
         </table>
         </div>
+        </details>
         <p class="caption" style="margin-bottom:1rem;">Both models generate 60s of video per HALLO3 Test reference
           (100 clips), with metrics computed per consecutive 10s segment; the rolling KV cache keeps memory constant over
           the whole stream. For AURA 1.3B, FVD and lip-sync stay flat over the six segments, and so does identity for most
@@ -1786,7 +1809,7 @@
       </div>
 
       <div id="abl-steps" class="abl-panel">
-        <p class="caption" style="text-align:left;font-weight:600;color:var(--ink);margin-bottom:.4rem;">Table 4 &mdash; Number of diffusion steps per chunk</p>
+        <p class="caption" style="text-align:left;font-weight:600;color:var(--ink);margin-bottom:.4rem;">Table 3 &mdash; Number of diffusion steps per chunk</p>
         <div class="tablewrap" style="margin-bottom:1rem;">
         <table>
           <thead>
@@ -1868,7 +1891,7 @@
       </div>
 
       <div id="abl-stage" class="abl-panel" hidden>
-        <p class="caption" style="text-align:left;font-weight:600;color:var(--ink);margin-bottom:.4rem;">Table 5 &mdash; Stage 1 only vs. Stage 1 + Stage 2 (DMD)</p>
+        <p class="caption" style="text-align:left;font-weight:600;color:var(--ink);margin-bottom:.4rem;">Table 4 &mdash; Stage 1 only vs. Stage 1 + Stage 2 (DMD)</p>
         <div class="tablewrap" style="margin-bottom:1rem;">
         <table>
           <thead>
@@ -1923,7 +1946,7 @@
       </div>
 
       <div id="abl-kv" class="abl-panel" hidden>
-        <p class="caption" style="text-align:left;font-weight:600;color:var(--ink);margin-bottom:.4rem;">Table 6 &mdash; KV cache refresh with an additional inference step</p>
+        <p class="caption" style="text-align:left;font-weight:600;color:var(--ink);margin-bottom:.4rem;">Table 5 &mdash; KV cache refresh with an additional inference step</p>
         <div class="tablewrap" style="margin-bottom:1rem;">
         <table>
           <thead>
@@ -2000,7 +2023,7 @@
       </div>
 
       <div id="abl-window" class="abl-panel" hidden>
-        <p class="caption" style="text-align:left;font-weight:600;color:var(--ink);margin-bottom:.4rem;">Table 7 &mdash; Rolling cache window size</p>
+        <p class="caption" style="text-align:left;font-weight:600;color:var(--ink);margin-bottom:.4rem;">Table 6 &mdash; Rolling cache window size</p>
         <div class="tablewrap" style="margin-bottom:1rem;">
         <table>
           <thead>

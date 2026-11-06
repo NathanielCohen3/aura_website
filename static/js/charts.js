@@ -37,6 +37,16 @@
     { name: 'Hallo3', color: COLORS.hallo3, v: [[1779.7, 1722.4, 1828.8], [1841.1, 1791.1, 1884.7], [1906.8, 1863.3, 1945.3], [1900.5, 1857.2, 1938.9]] },
   ];
 
+  // Long-form streaming (Figure 6 = paper supp Fig. long / Tab. long_eval_supp): 60 s, metrics per 10 s segment.
+  const LONG_SEGS = ['0–10', '10–20', '20–30', '30–40', '40–50', '50–60'];
+  const LONG_METRICS = [['FVD', 'FVD ↓', v => v.toFixed(1)], ['CSIM', 'CSIM ↑', v => v.toFixed(3)], ['Sync', 'Sync-C ↑', v => v.toFixed(2)]];
+  const LONG = [
+    { name: 'AURA 5B (ours)', color: COLORS.ours, FVD: [182.1, 206.0, 202.8, 198.3, 202.2, 195.2],
+      CSIM: [0.764, 0.735, 0.720, 0.710, 0.657, 0.689], Sync: [5.00, 5.22, 5.00, 4.85, 4.74, 4.79] },
+    { name: 'AURA 1.3B (ours)', color: COLORS.ours13, FVD: [179.2, 183.2, 180.0, 179.2, 180.2, 186.3],
+      CSIM: [0.826, 0.796, 0.798, 0.798, 0.789, 0.783], Sync: [4.81, 4.77, 4.81, 4.74, 4.81, 4.73] },
+  ];
+
   /* ---------------- helpers ---------------- */
   function el(tag, attrs, parent, text) {
     const e = document.createElementNS(NS, tag);
@@ -172,7 +182,45 @@
     el('line', { x1: m.l, x2: m.l + pw, y1: y0, y2: y0, stroke: AXIS, 'stroke-width': 1 }, svg);
   }
 
-  function drawAll() { hideTip(); drawBubbles(); drawElo(); }
+  /* ---------------- Figure 6: long-form metrics per 10 s segment ---------------- */
+  function longPanel(svg, x0, y0, w, h, key, title, fmt) {
+    const m = { l: 46, r: 10, t: 28, b: 30 }, pw = w - m.l - m.r, ph = h - m.t - m.b;
+    const vals = LONG.flatMap(s => s[key]);
+    let lo = Math.min(...vals), hi = Math.max(...vals), pad = (hi - lo) * 0.12; lo -= pad; hi += pad;
+    const X = i => x0 + m.l + (i + 0.5) / LONG_SEGS.length * pw;
+    const Y = v => y0 + m.t + (1 - (v - lo) / (hi - lo)) * ph;
+    const g = el('g', {}, svg);
+    el('text', { x: x0 + m.l, y: y0 + 14, 'font-size': 13, 'font-weight': 600, fill: INK }, g, title);
+    niceTicks(lo, hi, 5).forEach(v => {
+      el('line', { x1: x0 + m.l, x2: x0 + m.l + pw, y1: Y(v), y2: Y(v), stroke: GRID, 'stroke-width': 1 }, g);
+      el('text', { x: x0 + m.l - 6, y: Y(v) + 4, 'font-size': 10.5, fill: MUTED, 'text-anchor': 'end',
+        style: 'font-variant-numeric:tabular-nums' }, g, key === 'CSIM' ? v.toFixed(2) : (key === 'Sync' ? v.toFixed(1) : v));
+    });
+    el('line', { x1: x0 + m.l, x2: x0 + m.l + pw, y1: y0 + m.t + ph, y2: y0 + m.t + ph, stroke: AXIS, 'stroke-width': 1 }, g);
+    LONG_SEGS.forEach((lab, i) => el('text', { x: X(i), y: y0 + m.t + ph + 16, 'font-size': 10, fill: MUTED,
+      'text-anchor': 'middle' }, g, lab));
+    LONG.forEach(s => {
+      el('path', { d: s[key].map((v, i) => (i ? 'L' : 'M') + X(i) + ',' + Y(v)).join(''), fill: 'none',
+        stroke: s.color, 'stroke-width': 2.2, 'stroke-linejoin': 'round' }, g);
+      s[key].forEach((v, i) => {
+        const c = el('circle', { cx: X(i), cy: Y(v), r: 4, fill: s.color, stroke: SURFACE, 'stroke-width': 1.5 }, g);
+        const hit = el('circle', { cx: X(i), cy: Y(v), r: 10, fill: 'transparent' }, g);
+        bindTip(hit, `<b>${s.name}</b><br>${LONG_SEGS[i]} s · ${title.split(' ')[0]} <b>${fmt(v)}</b>`);
+      });
+    });
+  }
+  function drawLong() {
+    const host = document.getElementById('viz-long');
+    if (!host) return;
+    const W = host.clientWidth || 900, stacked = W < 640;
+    const pw = stacked ? W : W / 3, ph = stacked ? 210 : 240;
+    const svg = svgRoot(host, W, stacked ? ph * 3 : ph,
+      'FVD, CSIM and Sync-C per 10 s segment over 60 s of streaming, for AURA 5B and AURA 1.3B.');
+    LONG_METRICS.forEach(([key, title, fmt], k) =>
+      longPanel(svg, stacked ? 0 : k * pw, stacked ? k * ph : 0, pw, ph, key, title, fmt));
+  }
+
+  function drawAll() { hideTip(); drawBubbles(); drawElo(); drawLong(); }
   let rt = null;
   window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(drawAll, 120); });
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', drawAll); else drawAll();
