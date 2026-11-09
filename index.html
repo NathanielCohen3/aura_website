@@ -1358,8 +1358,7 @@
         <input id="cmp-seek" type="range" min="0" max="100" value="0" step="0.1">
       </div>
       <p class="caption" style="margin-top:.6rem;">All methods share the same driving audio; unmute plays the
-        reference track. Under each method: end-to-end time to generate 10 s of video and throughput on a single H100
-        GPU (Table 1).</p>
+        reference track. Under each method: end-to-end throughput on a single H100 GPU (Table 1).</p>
     </div>
   </section>
 
@@ -2261,9 +2260,7 @@
     function runtimeLine(label) {
       const r = RUNTIME[label];
       if (!r) return '<div class="crt">reference image</div>';
-      const t = r.t10 < 60 ? r.t10 + ' s' : (r.t10 / 60).toFixed(1) + ' min';
-      return '<div class="crt">' + t + ' for 10 s &middot; ' + r.fps + ' fps' +
-        (r.t10 <= 10 ? ' &middot; <span class="rt">real time</span>' : '') + '</div>';
+      return '<div class="crt">' + r.fps + ' fps</div>';
     }
 
     const setsEl = document.getElementById('cmp-sets'), sampEl = document.getElementById('cmp-samples'),
