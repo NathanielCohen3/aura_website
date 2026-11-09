@@ -678,6 +678,20 @@
       color: var(--accent);
     }
 
+    /* Runtime line under each comparator label (Table 1 numbers). */
+    .cell .crt {
+      font-family: var(--mono);
+      font-size: .68rem;
+      text-align: center;
+      color: var(--muted);
+      margin-top: .15rem;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .cell .crt .rt {
+      color: var(--accent);
+    }
+
     .cmp-controls {
       display: flex;
       align-items: center;
@@ -1343,8 +1357,9 @@
         <button id="cmp-mute" aria-label="mute/unmute"><i class="fas fa-volume-mute"></i></button>
         <input id="cmp-seek" type="range" min="0" max="100" value="0" step="0.1">
       </div>
-      <p class="caption" style="margin-top:.6rem;">All methods share the same driving audio &mdash; unmute plays the
-        reference track.</p>
+      <p class="caption" style="margin-top:.6rem;">All methods share the same driving audio; unmute plays the
+        reference track. Under each method: end-to-end time to generate 10 s of video and throughput on a single H100
+        GPU (Table 1).</p>
     </div>
   </section>
 
@@ -2236,6 +2251,21 @@
       ]
     };
 
+    // End-to-end runtime on one H100 (Table 1): fps = total throughput, t10 = seconds to generate 10 s of video
+    // (= frames in 10 s at the model's playback rate / fps; 16 Hz for AURA 1.3B, Live Avatar, Wan-S2V, else 25 Hz).
+    const RUNTIME = {
+      "AURA 1.3B (ours)": { fps: 20.7, t10: 7.7 }, "AURA 5B (ours)": { fps: 9.7, t10: 25.8 },
+      "TalkVerse (5B teacher)": { fps: 0.58, t10: 429 }, "Live Avatar": { fps: 1.9, t10: 84 },
+      "Hallo3": { fps: 0.22, t10: 1116 }, "Wan-S2V": { fps: 0.08, t10: 2077 },
+    };
+    function runtimeLine(label) {
+      const r = RUNTIME[label];
+      if (!r) return '<div class="crt">reference image</div>';
+      const t = r.t10 < 60 ? r.t10 + ' s' : (r.t10 / 60).toFixed(1) + ' min';
+      return '<div class="crt">' + t + ' for 10 s &middot; ' + r.fps + ' fps' +
+        (r.t10 <= 10 ? ' &middot; <span class="rt">real time</span>' : '') + '</div>';
+    }
+
     const setsEl = document.getElementById('cmp-sets'), sampEl = document.getElementById('cmp-samples'),
       gridEl = document.getElementById('cmp-grid'), playBtn = document.getElementById('cmp-play'),
       muteBtn = document.getElementById('cmp-mute'), seek = document.getElementById('cmp-seek');
@@ -2263,7 +2293,7 @@
           cell.innerHTML =
             '<div class="media portrait"><img src="' + m.src + '" alt="' + m.label + ' reference image">' +
             '<div class="media-ph"><i class="fas fa-image"></i><code>' + m.src.split('/').pop() + '</code></div></div>' +
-            '<div class="clabel">' + m.label + '</div>';
+            '<div class="clabel">' + m.label + '</div>' + runtimeLine(m.label);
           gridEl.appendChild(cell);
           return;
         }
@@ -2272,7 +2302,7 @@
           '<div class="media portrait"><video muted loop playsinline preload="metadata" poster="' + poster + '">' +
           '<source src="' + m.src + '" type="video/mp4"></video>' +
           '<div class="media-ph"><i class="fas fa-play"></i><code>' + m.src.split('/').pop() + '</code></div></div>' +
-          '<div class="clabel' + (m.ours ? ' ours' : '') + '">' + m.label + '</div>';
+          '<div class="clabel' + (m.ours ? ' ours' : '') + '">' + m.label + '</div>' + runtimeLine(m.label);
         gridEl.appendChild(cell);
         const vid = cell.querySelector('video');
         vids.push(vid);
