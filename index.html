@@ -906,6 +906,159 @@
       margin-bottom: 1rem;
     }
 
+    /* Live-demo screenshot: whole image is the link, CTA pinned bottom-centre */
+    .demo-shot {
+      position: relative;
+      display: block;
+      margin: 1.4rem auto 0;
+      max-width: 960px;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: #000;
+      transition: box-shadow .2s ease, border-color .2s ease;
+    }
+
+    .demo-shot img {
+      display: block;
+      width: 100%;
+      height: auto;
+      transition: opacity .2s ease;
+    }
+
+    .demo-shot:hover {
+      border-color: var(--accent);
+      box-shadow: 0 0 18px rgba(57, 242, 174, .35);
+      text-decoration: none;
+    }
+
+    .demo-shot:hover img {
+      opacity: .85;
+    }
+
+    .demo-cta {
+      position: absolute;
+      left: 50%;
+      bottom: 1.1rem;
+      transform: translateX(-50%);
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      white-space: nowrap;
+      background: var(--accent);
+      color: var(--accent-ink);
+      font-weight: 700;
+      font-size: .95rem;
+      padding: .6rem 1.3rem;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, .55);
+    }
+
+    @media (max-width: 520px) {
+      .demo-cta {
+        position: static;
+        transform: none;
+        display: flex;
+        justify-content: center;
+      }
+    }
+
+    /* "Behind the demo": chunk / context diagram (one cell = one latent frame = 0.25 s) */
+    .ctx-diagram {
+      display: grid;
+      gap: 1.1rem;
+      margin: 1.4rem 0 .6rem;
+      overflow-x: auto;
+    }
+
+    .ctx-row .ctx-name {
+      font-family: var(--mono);
+      font-size: .76rem;
+      letter-spacing: .06em;
+      color: var(--muted);
+      margin-bottom: .45rem;
+    }
+
+    .ctx-row .ctx-name b {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .ctx-cells {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .ctx-cells .blk {
+      display: flex;
+      gap: 3px;
+      padding: 3px;
+      border: 1px solid var(--line-strong);
+      border-radius: 3px;
+    }
+
+    .ctx-cells .blk+.blk {
+      margin-left: 4px;
+    }
+
+    .ctx-cells .c {
+      width: 26px;
+      height: 26px;
+      border-radius: 2px;
+      flex: none;
+    }
+
+    .c.anc {
+      background: var(--k-purple);
+    }
+
+    .c.rec {
+      background: #5a6068;
+    }
+
+    .c.gen {
+      background: var(--accent);
+    }
+
+    .ctx-cells .gap {
+      color: var(--muted);
+      font-family: var(--mono);
+      padding: 0 .6rem;
+    }
+
+    .ctx-cells .lat {
+      margin-left: 1rem;
+      font-family: var(--mono);
+      font-size: .8rem;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .ctx-cells .lat b {
+      color: var(--accent);
+    }
+
+    .ctx-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .4rem 1.3rem;
+      font-size: .85rem;
+      color: var(--muted);
+    }
+
+    .ctx-legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+    }
+
+    .ctx-legend .c {
+      width: 12px;
+      height: 12px;
+      border-radius: 2px;
+      display: inline-block;
+    }
+
     .demo-ph {
       margin-top: 1.4rem;
       aspect-ratio: 16/9;
@@ -1024,6 +1177,7 @@
         <a href="#comparisons">Comparisons</a>
         <a href="#quant">Quantitative</a>
         <a href="#ablations">Ablations</a>
+        <a href="#demo-details">Demo details</a>
         <a href="#bibtex">BibTeX</a>
       </div>
     </div>
@@ -1050,6 +1204,7 @@
 
       <!-- EDIT: add arXiv / Code / Video links once public -->
       <div class="links">
+        <a class="btn" href="https://aura.kyutai.org/" target="_blank" rel="noopener"><i class="fas fa-comments"></i> Live demo</a>
         <a class="btn" href="static/paper/AURA_bmvc.pdf"><i class="fas fa-file-pdf"></i> Paper</a>
         <a class="btn ghost" href="#"><!-- official arXiv logomark --><svg class="arxiv-logo" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17.732 24.269"><g><path d="M573.549,280.916l2.266,2.738,6.674-7.84c.353-.47.52-.717.353-1.117a1.218,1.218,0,0,0-1.061-.748h0a.953.953,0,0,0-.712.262Z" transform="translate(-566.984 -271.548)" fill="#bdb9b4"/><path d="M579.525,282.225l-10.606-10.174a1.413,1.413,0,0,0-.834-.5,1.09,1.09,0,0,0-1.027.66c-.167.4-.047.681.319,1.206l8.44,10.242h0l-6.282,7.716a1.336,1.336,0,0,0-.323,1.3,1.114,1.114,0,0,0,1.04.69A.992.992,0,0,0,571,293l8.519-7.92A1.924,1.924,0,0,0,579.525,282.225Z" transform="translate(-566.984 -271.548)" fill="#b31b1b"/><path d="M584.32,293.912l-8.525-10.275,0,0L573.53,280.9l-1.389,1.254a2.063,2.063,0,0,0,0,2.965l10.812,10.419a.925.925,0,0,0,.742.282,1.039,1.039,0,0,0,.953-.667A1.261,1.261,0,0,0,584.32,293.912Z" transform="translate(-566.984 -271.548)" fill="#bdb9b4"/></g></svg> arXiv</a>
         <a class="btn ghost" href="#"><i class="fab fa-github"></i> Code</a>
@@ -1086,19 +1241,21 @@
     </div>
   </header>
 
-  <!-- ================= DEMO (placeholder until the live demo is public) ================= -->
+  <!-- ================= DEMO ================= -->
   <section id="demo" style="padding-top:1.5rem;">
-    <div class="wrap narrow">
+    <div class="wrap">
       <p class="eyebrow" style="text-align:center;">Live demo</p>
       <h2 class="title" style="text-align:center;">Talk to AURA</h2>
-      <!-- EDIT on release: replace the placeholder with the demo intro (how it works) + link / embed. -->
-      <p style="text-align:center;">AURA 1.3B is fast enough to give a face to a voice assistant. In our live demo, it is
-        coupled with a speech-to-speech conversational assistant: the avatar is generated on the fly from the assistant's
-        speech, in real time, on a single H100 GPU.</p>
-      <div class="demo-ph">
-        <span class="demo-tag">// coming soon</span>
-        <span class="btn ghost" aria-disabled="true"><i class="fas fa-comments"></i> Try the demo</span>
-      </div>
+      <p class="narrow" style="text-align:center;">AURA 1.3B gives a face to <a href="https://unmute.sh/" target="_blank"
+          rel="noopener">Unmute</a>, Kyutai's voice AI. Pick a face (or upload your own), click to talk, and the avatar
+        is generated live from Unmute's speech, in real time on a single H100 GPU.</p>
+      <a class="demo-shot" href="https://aura.kyutai.org/" target="_blank" rel="noopener"
+        aria-label="Open the AURA x Unmute live demo">
+        <img src="static/images/demo_aura_unmute.jpg" width="1600" height="724"
+          alt="AURA x Unmute demo interface: the avatar, the bot and user audio indicators, and the face picker">
+        <span class="demo-cta"><i class="fas fa-comments"></i> Try it at aura.kyutai.org</span>
+      </a>
+      <p class="caption">The AURA &times; Unmute interface. <a href="#demo-details">How the demo works &darr;</a></p>
     </div>
   </section>
 
@@ -2094,6 +2251,84 @@
       </div>
     </div>
   </section>
+
+  <!-- ================= BEHIND THE DEMO ================= -->
+  <section id="demo-details">
+    <div class="wrap narrow">
+      <p class="eyebrow">Behind the demo</p>
+      <h2 class="title">How the demo works</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="n">1</div>
+          <div>
+            <h4>Unmute, with a face</h4>
+            <p><a href="https://unmute.sh/" target="_blank" rel="noopener">Unmute</a> is Kyutai's voice AI: a
+              streaming speech-to-text model listens to you, a text LLM writes the answer, and a streaming
+              text-to-speech model speaks it. In the demo, the speech Unmute plays back is encoded on the fly with
+              Mimi, the same streaming audio codec AURA 1.3B is conditioned on, and AURA turns it into video chunk by
+              chunk, with no audio look-ahead.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="n">2</div>
+          <div>
+            <h4>Smaller chunks for lower latency</h4>
+            <p>A chunk can only be generated once all of its audio has been spoken, so the avatar lags the voice by at
+              least one chunk plus the time to generate it. With the paper's chunks of 4 latent frames (1&nbsp;s of
+              video), this delay is about 2&nbsp;s in our streaming setup. For the demo, we retrain AURA 1.3B (Stage 1
+              and Stage 2) with chunks of 2 latent frames (0.5&nbsp;s), which brings it down to about
+              <b>1.2&nbsp;s</b> while staying real time.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="n">3</div>
+          <div>
+            <h4>Same context as the paper model</h4>
+            <p>Smaller chunks should not mean less context. Each 2-frame chunk attends to the 2 previous chunks and to
+              2 anchor chunks from the start of the stream, i.e. 4 latent frames of recent motion and 4 latent frames
+              of identity anchor: exactly what the 4-frame model sees through its previous chunk and its anchor chunk
+              (Figure 3a). Only the chunk being generated gets smaller.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="ctx-diagram" role="img"
+        aria-label="Attention context per generated chunk. Paper model: 4 anchor frames, 4 recent frames, 4 generated frames, about 2 s delay. Demo model: two 2-frame anchor chunks, two 2-frame recent chunks, 2 generated frames, about 1.2 s delay.">
+        <div class="ctx-row">
+          <div class="ctx-name"><b>Paper model</b> &middot; chunks of 4 latent frames (1 s)</div>
+          <div class="ctx-cells">
+            <span class="blk"><i class="c anc"></i><i class="c anc"></i><i class="c anc"></i><i class="c anc"></i></span>
+            <span class="gap">&hellip;</span>
+            <span class="blk"><i class="c rec"></i><i class="c rec"></i><i class="c rec"></i><i class="c rec"></i></span>
+            <span class="blk"><i class="c gen"></i><i class="c gen"></i><i class="c gen"></i><i class="c gen"></i></span>
+            <span class="lat">delay &asymp; 2 s</span>
+          </div>
+        </div>
+        <div class="ctx-row">
+          <div class="ctx-name"><b>Demo model</b> &middot; chunks of 2 latent frames (0.5 s)</div>
+          <div class="ctx-cells">
+            <span class="blk"><i class="c anc"></i><i class="c anc"></i></span>
+            <span class="blk"><i class="c anc"></i><i class="c anc"></i></span>
+            <span class="gap">&hellip;</span>
+            <span class="blk"><i class="c rec"></i><i class="c rec"></i></span>
+            <span class="blk"><i class="c rec"></i><i class="c rec"></i></span>
+            <span class="blk"><i class="c gen"></i><i class="c gen"></i></span>
+            <span class="lat">delay &asymp; <b>1.2 s</b></span>
+          </div>
+        </div>
+      </div>
+      <div class="ctx-legend">
+        <span><i class="c anc"></i> anchor (identity)</span>
+        <span><i class="c rec"></i> recent context</span>
+        <span><i class="c gen"></i> chunk being generated</span>
+      </div>
+      <p class="caption">Figure 7. What each generated chunk attends to. One square = one latent frame (4 video frames,
+        0.25&nbsp;s at 16&nbsp;fps). The demo model keeps the same 8 latent frames of context but generates half as much
+        video per step, halving the audio it must wait for. All results above use the paper model.</p>
+    </div>
+  </section>
+
+  <!-- EDIT: closing video slot (demo recording or BMVC presentation video) goes here, after "How the demo works" -->
 
   <!-- ================= BIBTEX ================= -->
   <section id="bibtex" class="alt">
